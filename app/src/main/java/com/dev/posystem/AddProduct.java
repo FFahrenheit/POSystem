@@ -244,9 +244,10 @@ public class AddProduct extends AppCompatActivity
     private String getCashier()
     {
         SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        String cashier = "http://"+preferences.getString("server","localhost")+"/POSystem/";
+        String cashier = preferences.getString("cashier","Ivan");
         return cashier;
     }
+
     @Override
     public void onBackPressed()
     {
@@ -255,5 +256,4 @@ public class AddProduct extends AppCompatActivity
         setResult(RESULT_OK, data);
         finish();
     }
-
 }

@@ -30,9 +30,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                         //RequestCode = 100
                         Intent intent = new Intent(MainActivity.this,AddProduct.class);
                         startActivityForResult(intent,100);
-                        //startActivity(intent);
                     }
                 });
 
@@ -134,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                                         switch(statusCode[0])
                                         {
                                             case 200:
-                                                Toast.makeText(MainActivity.this,"WOOOOW",Toast.LENGTH_SHORT).show();
                                                 product.setName(response.getString("name"));
                                                 product.setPrice(response.getDouble("price"));
                                                 product.setQuantity(1.0);
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+        updateList();
     }
 
     @Override
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     private String getCashier()
     {
         SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        String cashier = "http://"+preferences.getString("server","localhost")+"/POSystem/";
+        String cashier = preferences.getString("cashier","Ivan");
         return cashier;
     }
 
@@ -245,7 +246,57 @@ public class MainActivity extends AppCompatActivity {
             {
                 String returnedResult = data.getData().toString();
                 Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
+                if(Integer.parseInt(returnedResult)!=0)
+                {
+                    updateList();
+                }
             }
         }
+    }
+
+    private void updateList()
+    {
+        final String url = getServer()+"getCart.php?user="+getCashier();
+        Toast.makeText(getApplicationContext(),url,Toast.LENGTH_SHORT).show();
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try
+                        {
+                            products.clear();
+                            for (int i=0; i<response.length();i++)
+                            {
+                                JSONObject product = response.getJSONObject(i);
+                                Product prod = new Product();
+                                prod.setName(product.getString("name"));
+                                prod.setPrimaryKey(product.getInt("pk"));
+                                prod.setQuantity(product.getDouble("qty"));
+                                prod.setCodeBar(product.getString("code"));
+                                prod.setPrice(product.getDouble("price"));
+                                prod.setTotal(prod.getPrice() * prod.getQuantity());
+                                products.add(prod);
+                            }
+                            productAdapter.notifyDataSetChanged();
+                            updateCart();
+                        }
+                        catch(JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"No se pudo actualizar el carrito\n"+url,Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        queue.add(request);
     }
 }
