@@ -11,11 +11,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".AddProduct"
-            android:label="@string/title_activity_add_product"
+            android:label="Agregar productos"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".AppSettings"
-            android:label="@string/title_activity_app_settings"
+            android:label="Ajustes"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
@@ -23,7 +23,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

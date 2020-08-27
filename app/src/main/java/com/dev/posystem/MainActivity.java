@@ -35,7 +35,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTitle("Punto de venta");
         totalProducts = (TextView) findViewById(R.id.itemsCount);
         totalPrice = (TextView) findViewById(R.id.totalCount);
         products = new ArrayList<>();
@@ -75,8 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view)
                     {
+                        //RequestCode = 100
                         Intent intent = new Intent(MainActivity.this,AddProduct.class);
-                        startActivity(intent);
+                        startActivityForResult(intent,100);
                     }
                 });
 
@@ -234,5 +235,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         String cashier = "http://"+preferences.getString("server","localhost")+"/POSystem/";
         return cashier;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {
+            String returnedResult = data.getData().toString();
+            Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
+        }
     }
 }
