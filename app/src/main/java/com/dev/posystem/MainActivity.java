@@ -42,7 +42,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private TicketController controller;
     public ArrayList<Product> products;
     private ProductAdapter productAdapter;
     private ListView productList;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        controller = new TicketController(getApplicationContext());
         totalProducts = (TextView) findViewById(R.id.itemsCount);
         totalPrice = (TextView) findViewById(R.id.totalCount);
         products = new ArrayList<>();
@@ -130,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                                                 product.setTotal(product.getPrice());
                                                 productAdapter.products.add(product);
                                                 productAdapter.notifyDataSetChanged();
+                                                updateBarcode();
+                                                updateCart();
                                                 break;
                                             case 400:
                                                 message = "No se pudo acceder al servidor";
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateCart()
     {
         productAdapter.notifyDataSetChanged();
-        totalPrice.setText("$"+productAdapter.getCount());
+        totalPrice.setText("$"+productAdapter.getTotal());
         totalProducts.setText("Total de productos: "+productAdapter.getCount());
     }
 

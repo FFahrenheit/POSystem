@@ -54,10 +54,10 @@ public class ProductAdapter extends BaseAdapter
         tvn.setText(products.get(i).getCodeBar());
 
         tvn = (TextView) v.findViewById(R.id.productPrice);
-        tvn.setText(""+products.get(i).getTotal());
+        tvn.setText("$"+products.get(i).getTotal());
 
         tvn = (TextView) v.findViewById(R.id.productQuantity);
-        tvn.setText(""+products.get(i).getQuantity());
+        tvn.setText("Cantidad: "+products.get(i).getQuantity());
 
         return v;
     }
