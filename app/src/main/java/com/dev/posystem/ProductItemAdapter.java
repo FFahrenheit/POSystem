@@ -9,20 +9,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ProductAdapter extends BaseAdapter
+public class ProductItemAdapter extends BaseAdapter
 {
-    public ArrayList<Product> products;
+    public ArrayList<ProductItem> products;
     public Context context;
-
-    public Double getTotal()
-    {
-        Double total = 0.0;
-        for (int i = 0; i < products.size(); i++)
-        {
-            total += products.get(i).getTotal();
-        }
-        return total;
-    }
 
     @Override
     public int getCount() {
@@ -36,11 +26,12 @@ public class ProductAdapter extends BaseAdapter
 
     @Override
     public long getItemId(int i) {
-        return products.get(i).getPrimaryKey();
+        return Long.parseLong(products.get(i).getCodeBar());
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup)
+    {
 
         LayoutInflater link = LayoutInflater.from(context);
 
@@ -53,10 +44,10 @@ public class ProductAdapter extends BaseAdapter
         tvn.setText(products.get(i).getCodeBar());
 
         tvn = (TextView) v.findViewById(R.id.productPrice);
-        tvn.setText("$"+products.get(i).getTotal());
+        tvn.setText("$"+products.get(i).getPrice());
 
         tvn = (TextView) v.findViewById(R.id.productQuantity);
-        tvn.setText("Cantidad: "+products.get(i).getQuantity());
+        tvn.setText("Cantidad: "+products.get(i).getStock()+" "+products.get(i).getEsp());
 
         return v;
     }

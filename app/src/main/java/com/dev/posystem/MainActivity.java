@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         totalProducts = (TextView) findViewById(R.id.itemsCount);
         totalPrice = (TextView) findViewById(R.id.totalCount);
         products = new ArrayList<>();
-        products.add(new Product());
+        //products.add(new Product());
         productAdapter = new ProductAdapter();
         productList = (ListView) findViewById(R.id.productList);
         productAdapter.context = MainActivity.this;
@@ -68,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
         productList.setAdapter(productAdapter);
 
         FloatingActionButton fab = findViewById(R.id.finishSale);
+        FloatingActionButton addProduct = findViewById(R.id.addProduct);
+
+        addProduct.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(MainActivity.this,AddProduct.class);
+                        startActivity(intent);
+                    }
+                });
+
 
         fab.setOnClickListener(
                 new View.OnClickListener() {
