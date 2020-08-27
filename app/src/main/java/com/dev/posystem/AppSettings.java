@@ -54,7 +54,7 @@ public class AppSettings extends AppCompatActivity {
             }
         });
 
-        ((TextView) findViewById(R.id.serverIPName)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) findViewById(R.id.cashierNameName)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setCashier();

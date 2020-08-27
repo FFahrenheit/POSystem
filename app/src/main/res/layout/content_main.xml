@@ -30,6 +30,7 @@
             android:maxLines="1"
             android:id="@+id/scannerCode"
             android:inputType="number"
+            android:textSize="20dp"
             android:textAlignment="center">
         </android.support.design.widget.TextInputEditText>
 
@@ -42,7 +43,7 @@
                 android:id="@+id/itemsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18dp"
+                android:textSize="25dp"
                 android:text="Total de productos: 0"
                 android:textAlignment="textStart"
                 android:layout_marginLeft="20dp"
@@ -53,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="$0.00"
-                android:textSize="20dp"
+                android:textSize="25dp"
                 android:layout_marginRight="20dp"
                 android:textAlignment="textEnd"/>
         </android.support.v7.widget.LinearLayoutCompat>

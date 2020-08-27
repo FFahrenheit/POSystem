@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:hint="Nombre del producto o codigo"
             android:maxLines="1"
+            android:textSize="30dp"
             android:id="@+id/searchScanCode"
             android:inputType="text"
             android:textAlignment="center">

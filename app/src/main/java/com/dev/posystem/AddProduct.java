@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 public class AddProduct extends AppCompatActivity
 {
-    private Integer productsAdded = 0;
+    private Integer productsAdded;
     private TextInputEditText search;
     private ListView searchResults;
     private ArrayList<ProductItem> products;
@@ -51,6 +51,7 @@ public class AddProduct extends AppCompatActivity
         setContentView(R.layout.activity_add_product);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        productsAdded = 0;
 
         search = (TextInputEditText) findViewById(R.id.searchScanCode);
         searchResults = (ListView) findViewById(R.id.searchProductList);
@@ -246,11 +247,9 @@ public class AddProduct extends AppCompatActivity
         String cashier = "http://"+preferences.getString("server","localhost")+"/POSystem/";
         return cashier;
     }
-
     @Override
-    public void onStop ()
+    public void onBackPressed()
     {
-        super.onStop();
         Intent data = new Intent();
         data.setData(Uri.parse(productsAdded.toString()));
         setResult(RESULT_OK, data);

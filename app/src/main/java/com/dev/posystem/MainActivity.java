@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                         //RequestCode = 100
                         Intent intent = new Intent(MainActivity.this,AddProduct.class);
                         startActivityForResult(intent,100);
+                        //startActivity(intent);
                     }
                 });
 
@@ -237,11 +238,14 @@ public class MainActivity extends AppCompatActivity {
         return cashier;
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(getApplicationContext(),"Request: "+requestCode+" Result: "+resultCode,Toast.LENGTH_SHORT).show();
         if (requestCode == 100) {
-            String returnedResult = data.getData().toString();
-            Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
+            if(data.getData() != null)
+            {
+                String returnedResult = data.getData().toString();
+                Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
