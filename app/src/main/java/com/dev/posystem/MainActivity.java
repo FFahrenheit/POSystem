@@ -1,13 +1,16 @@
 package com.dev.posystem;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,8 @@ import androidx.navigation.ui.NavigationUI;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity{
     public ArrayList<Product> products;
     private ProductAdapter productAdapter;
     private ListView productList;
+    private NavigationView navigationView;
     private TextView totalProducts;
     private TextView totalPrice;
     private TextInputEditText barcode;
@@ -99,7 +105,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -120,14 +126,18 @@ public class MainActivity extends AppCompatActivity{
                 {
                     case R.id.nav_addP:
                         Intent intent = new Intent(MainActivity.this, NewProduct.class);
+                        intent.putExtra("edit",false);
                         startActivity(intent);
                         break;
                     default:
                         Snackbar.make(productList, "Aun no implementado", Snackbar.LENGTH_LONG)
                                 .show();
-
                 }
                 //close navigation drawer
+                int size = navigationView.getMenu().size();
+                for (int i = 0; i < size; i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
                 ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -215,6 +225,136 @@ public class MainActivity extends AppCompatActivity{
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        productList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> listView, View itemView, final int itemPosition, long itemId)
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+                final EditText edittext = new EditText(MainActivity.this);
+                edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
+                        InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                        InputType.TYPE_NUMBER_FLAG_SIGNED);
+                edittext.setHint("Nueva cantidad");
+
+                alert.setMessage("Editar cantidades o borrar articulo");
+                alert.setTitle("Editar "+products.get(itemPosition).getName());
+
+                alert.setView(edittext);
+
+                alert.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        String qty = edittext.getText().toString();
+                        if(qty.equals("") || qty == null || qty.equals("0"))
+                        {
+                            Snackbar.make(productList, "Ingrese una cantidad valida", Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        String url = getServer() + "editQty.php?pk="+products.get(itemPosition).getPrimaryKey()+"&qty="+edittext.getText().toString();
+                        JsonObjectRequest request = new JsonObjectRequest(
+                                Request.Method.GET,
+                                url,
+                                null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            int status = response.getInt("status");
+                                            switch(status)
+                                            {
+                                                case 200:
+                                                    Snackbar.make(productList, "Cantidad modificada", Snackbar.LENGTH_LONG).show();
+                                                    updateList();
+                                                    break;
+                                                case 100:
+                                                    Snackbar.make(productList, "Error de conexion", Snackbar.LENGTH_LONG).show();
+                                                    break;
+                                                case 101:
+                                                    Snackbar.make(productList, "No se pudo actualizar la cantidad", Snackbar.LENGTH_LONG).show();
+                                                    break;
+                                                default:
+                                                    Snackbar.make(productList, "Error desconocido", Snackbar.LENGTH_LONG).show();
+                                                    break;
+                                            }
+                                        } catch (JSONException e) {
+                                            Snackbar.make(productList, "Error con el servidor", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Snackbar.make(productList, "Error con la peticion", Snackbar.LENGTH_LONG).show();
+                                    }
+                                }
+                        );
+                        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                        queue.add(request);
+                    }
+                });
+
+                alert.setNegativeButton("Borrar articulo", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        {
+                            String url = getServer() + "deleteArticle.php?pk="+products.get(itemPosition).getPrimaryKey();
+
+                            JsonObjectRequest request = new JsonObjectRequest(
+                                    Request.Method.GET,
+                                    url,
+                                    null,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            try {
+                                                int status = response.getInt("status");
+                                                switch(status)
+                                                {
+                                                    case 200:
+                                                        Snackbar.make(productList, "Articulo borrado", Snackbar.LENGTH_LONG).show();
+                                                        updateList();
+                                                        break;
+                                                    case 100:
+                                                        Snackbar.make(productList, "Error de conexion", Snackbar.LENGTH_LONG).show();
+                                                        break;
+                                                    case 101:
+                                                        Snackbar.make(productList, "No se pudo actualizar la cantidad", Snackbar.LENGTH_LONG).show();
+                                                        break;
+                                                    default:
+                                                        Snackbar.make(productList, "Error desconocido", Snackbar.LENGTH_LONG).show();
+                                                        break;
+                                                }
+                                            } catch (JSONException e) {
+                                                Snackbar.make(productList, "Error con el servidor", Snackbar.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Snackbar.make(productList, "Error con la peticion", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                            );
+                            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                            queue.add(request);
+                        }
+                    }
+                });
+
+                alert.setNeutralButton("Cancelar",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Snackbar.make(productList, "Operacion cancelada", Snackbar.LENGTH_LONG).show();
+                    }
+                });
+
+                alert.show();
+
+
+            }
+        });
         updateList();
     }
 
@@ -266,12 +406,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(getApplicationContext(),"Request: "+requestCode+" Result: "+resultCode,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Request: "+requestCode+" Result: "+resultCode,Toast.LENGTH_SHORT).show();
         if (requestCode == 100) {
             if(data.getData() != null)
             {
                 String returnedResult = data.getData().toString();
-                Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Hay que actualizar "+returnedResult+" productos",Toast.LENGTH_SHORT).show();
                 if(Integer.parseInt(returnedResult)!=0)
                 {
                     updateList();
@@ -283,7 +423,7 @@ public class MainActivity extends AppCompatActivity{
     private void updateList()
     {
         final String url = getServer()+"getCart.php?user="+getCashier();
-        Toast.makeText(getApplicationContext(),url,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),url,Toast.LENGTH_SHORT).show();
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -299,6 +439,7 @@ public class MainActivity extends AppCompatActivity{
                                 JSONObject product = response.getJSONObject(i);
                                 Product prod = new Product();
                                 prod.setName(product.getString("name"));
+                                prod.setEsp(product.getString("esp"));
                                 prod.setPrimaryKey(product.getInt("pk"));
                                 prod.setQuantity(product.getDouble("qty"));
                                 prod.setCodeBar(product.getString("code"));
@@ -330,5 +471,14 @@ public class MainActivity extends AppCompatActivity{
         );
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(request);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 }

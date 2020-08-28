@@ -53,8 +53,8 @@ public class AddProduct extends AppCompatActivity
         setSupportActionBar(toolbar);
         productsAdded = 0;
 
-        search = (TextInputEditText) findViewById(R.id.searchScanCode);
-        searchResults = (ListView) findViewById(R.id.searchProductList);
+        search = findViewById(R.id.searchScanCode);
+        searchResults = findViewById(R.id.searchProductList);
 
         products = new ArrayList<>();
         adapter = new ProductItemAdapter();
@@ -104,7 +104,7 @@ public class AddProduct extends AppCompatActivity
                                                     {
                                                         case 200:
                                                             productsAdded++;
-                                                            message = "Producto agregado";
+                                                            message = "Producto agregado al carrito";
                                                             break;
                                                         default:
                                                             message = "Error desconocido";
@@ -168,7 +168,7 @@ public class AddProduct extends AppCompatActivity
                     products.clear();
                     String searchQuery = charSequence.toString();
                     String url;
-                    if(isCode(searchQuery))
+                    if(isCode(searchQuery) && !searchQuery.contains("."))
                     {
                         url = server + "searchByCode.php?code="+searchQuery;
                     }

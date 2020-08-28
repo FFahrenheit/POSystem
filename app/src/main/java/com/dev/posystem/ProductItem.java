@@ -17,6 +17,19 @@ public class ProductItem
         esp = "granel/pieza";
     }
 
+    public String getGET()
+    {
+        return "?code="+codeBar+"&name="+name+"&stock="+stock+"&price="+price+"&esp="+esp;
+    }
+
+    public ProductItem(String codeBar, String name, Double stock, Double price, String esp) {
+        this.codeBar = codeBar;
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+        this.esp = esp;
+    }
+
     public String getCodeBar() {
         return codeBar;
     }

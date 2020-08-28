@@ -17,6 +17,7 @@ public class Product
     private String codeBar;
     private Double total;
     private Integer primaryKey;
+    private String esp="pieza";
 
     public Product()
     {
@@ -26,6 +27,15 @@ public class Product
         codeBar = "";
         total = 0.0;
         primaryKey = 0;
+        esp = "pieza";
+    }
+
+    public String getEsp() {
+        return esp;
+    }
+
+    public void setEsp(String esp) {
+        this.esp = esp;
     }
 
     public String getName() {
