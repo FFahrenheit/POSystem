@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -40,7 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
     public ArrayList<Product> products;
@@ -58,13 +60,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("Punto de venta");
-        totalProducts = (TextView) findViewById(R.id.itemsCount);
-        totalPrice = (TextView) findViewById(R.id.totalCount);
+        totalProducts = findViewById(R.id.itemsCount);
+        totalPrice = findViewById(R.id.totalCount);
         products = new ArrayList<>();
-        //products.add(new Product());
         productAdapter = new ProductAdapter();
-        productList = (ListView) findViewById(R.id.productList);
+        productList = findViewById(R.id.productList);
         productAdapter.context = MainActivity.this;
         productAdapter.products = products;
         productList.setAdapter(productAdapter);
@@ -85,11 +85,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         fab.setOnClickListener(
-                new View.OnClickListener() {
+            new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "El carrito no pudo ser cargado", Snackbar.LENGTH_LONG)
+                        .setAction("Reintentar", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                updateList();
+                            }
+                        }).show();
             }
         });
 
@@ -98,15 +103,37 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-        Toast.makeText(getApplicationContext(),"hOLA", Toast.LENGTH_SHORT);
+        //NavigationUI.setupWithNavController(navigationView, navController);
 
-        barcode = (TextInputEditText) findViewById(R.id.scannerCode);
+        navigationView.bringToFront();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Toast.makeText(getApplicationContext(),"Jeje"+item.getItemId(),Toast.LENGTH_SHORT).show();
+                switch (item.getItemId())
+                {
+                    case R.id.nav_addP:
+                        Intent intent = new Intent(MainActivity.this, NewProduct.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        Snackbar.make(productList, "Aun no implementado", Snackbar.LENGTH_LONG)
+                                .show();
+
+                }
+                //close navigation drawer
+                ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        barcode = findViewById(R.id.scannerCode);
         barcode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -200,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showSettings(MenuItem item)
     {
-
         Intent changeWindow = new Intent(MainActivity.this, AppSettings.class);
         startActivity(changeWindow);
     }
@@ -292,7 +318,13 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"No se pudo actualizar el carrito\n"+url,Toast.LENGTH_SHORT).show();
+                        Snackbar.make(productList, "El carrito no pudo ser cargado", Snackbar.LENGTH_LONG)
+                                .setAction("Reintentar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        updateList();
+                                    }
+                                }).show();
                     }
                 }
         );

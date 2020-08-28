@@ -6,5 +6,5 @@
         android:orderInCategory="100"
         android:title="Ajustes"
         android:onClick="showSettings"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 </menu>
