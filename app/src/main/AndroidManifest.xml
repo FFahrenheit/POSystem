@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dev.posystem">
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher2"
@@ -10,9 +11,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".AddInventory"
+            android:label="@string/title_activity_add_inventory"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".EditProduct"
             android:label="Editar inventario"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewProduct"
             android:label="Agregar producto"

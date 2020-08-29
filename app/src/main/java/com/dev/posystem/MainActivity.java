@@ -135,11 +135,13 @@ public class MainActivity extends AppCompatActivity{
                         intent = new Intent(MainActivity.this,EditProduct.class);
                         startActivity(intent);
                         break;
+                    case R.id.nav_inventory:
+                        intent = new Intent(MainActivity.this,AddInventory.class);
+                        startActivity(intent);
                     default:
                         Snackbar.make(productList, "Aun no implementado", Snackbar.LENGTH_LONG)
                                 .show();
                 }
-                //close navigation drawer
                 int size = navigationView.getMenu().size();
                 for (int i = 0; i < size; i++) {
                     navigationView.getMenu().getItem(i).setChecked(false);

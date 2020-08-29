@@ -64,6 +64,9 @@ public class Utilities
             case 101:
                 snack("Error al realizar la operacion");
                 break;
+            case 102:
+                snack("Se realizo la operacion pero no se registro en el historial");
+                break;
             default:
                 snack("Error desconocido");
                 break;
