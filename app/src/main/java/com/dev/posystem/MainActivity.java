@@ -27,6 +27,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity{
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Toast.makeText(getApplicationContext(),"Jeje"+item.getItemId(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Jeje"+item.getItemId(),Toast.LENGTH_SHORT).show();
                 Intent intent;
                 switch (item.getItemId())
                 {
@@ -361,6 +362,11 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         updateList();
+        barcode.setSelection(0);
+        barcode.requestFocus();
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 
     @Override
@@ -481,6 +487,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        barcode.setSelection(0);
+        barcode.requestFocus();
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
         int size = navigationView.getMenu().size();
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
