@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,124 +36,125 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class AddProduct extends AppCompatActivity
+public class EditProduct extends AppCompatActivity
 {
-    private Integer productsAdded;
     private TextInputEditText search;
     private ListView searchResults;
     private ArrayList<ProductItem> products;
     private ProductItemAdapter adapter;
     private String server;
-    private String cashier;
+    private Utilities util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
+        setContentView(R.layout.activity_edit_product);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        productsAdded = 0;
+        search = findViewById(R.id.searchEditProduct);
+        searchResults = findViewById(R.id.searchEditList);
 
-        search = findViewById(R.id.searchScanCode);
-        searchResults = findViewById(R.id.searchProductList);
+        util = new Utilities(getApplicationContext(),search);
 
         products = new ArrayList<>();
         adapter = new ProductItemAdapter();
-        adapter.context = AddProduct.this;
+        adapter.context = EditProduct.this;
         adapter.products = products;
         searchResults.setAdapter(adapter);
 
-        server = getServer();
-        cashier = getCashier();
+        server = util.getServer();
 
-        searchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchResults.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             public void onItemClick(AdapterView<?> listView, View itemView, final int itemPosition, long itemId)
             {
-                AlertDialog.Builder alert = new AlertDialog.Builder(AddProduct.this);
-                final EditText edittext = new EditText(AddProduct.this);
-                edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
-                        InputType.TYPE_NUMBER_FLAG_DECIMAL |
-                        InputType.TYPE_NUMBER_FLAG_SIGNED);
-                alert.setMessage("Ingrese la cantidad a agregar");
-                alert.setTitle("Agregar "+products.get(itemPosition).getName());
+                AlertDialog.Builder alert = new AlertDialog.Builder(EditProduct.this);
 
-                alert.setView(edittext);
+                alert.setMessage("¿Que desea hacer con este producto?");
+                alert.setTitle("Modificar o eliminar "+products.get(itemPosition).getName());
 
-                alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+
+                alert.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton)
                     {
-                        if(isCode(edittext.getText().toString())) {
-                            Double value = Double.parseDouble(edittext.getText().toString());
-                            if (value > products.get(itemPosition).getStock()) {
-                                Toast.makeText(getApplicationContext(), "No hay suficiente stock", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(EditProduct.this,NewProduct.class);
+                        intent.putExtra("edit",true);
+                        intent.putExtra("code",products.get(itemPosition).getCodeBar());
+                        intent.putExtra("name",products.get(itemPosition).getName());
+                        intent.putExtra("stock",products.get(itemPosition).getStock().toString());
+                        intent.putExtra("price",products.get(itemPosition).getPrice().toString());
+                        intent.putExtra("esp",products.get(itemPosition).getEsp());
+                        startActivity(intent);
+                    }
+                });
+
+                alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        util.snack("Operacion cancelada");
+                    }
+                });
+
+                alert.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        AlertDialog.Builder nAlert = new AlertDialog.Builder(EditProduct.this);
+
+                        nAlert.setMessage("¿Seguro que desea eliminar el producto?");
+                        nAlert.setTitle("Eliminar "+products.get(itemPosition).getName());
+
+                        nAlert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                util.snack("Operacion cancelada");
                             }
-                            else
-                            {
-                                String url = server + "addProductManual.php?code="+products.get(itemPosition).getCodeBar()
-                                        +"&qty="+value+"&user="+cashier;
-                                JsonObjectRequest request  = new JsonObjectRequest(
+                        });
+
+                        nAlert.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String nUrl = server + "deleteProduct.php?code="+products.get(itemPosition).getCodeBar();
+
+                                JsonObjectRequest request = new JsonObjectRequest(
                                         Request.Method.GET,
-                                        url,
+                                        nUrl,
                                         null,
                                         new Response.Listener<JSONObject>() {
                                             @Override
                                             public void onResponse(JSONObject response) {
                                                 try {
-                                                    int statusCode = response.getInt("status");
-                                                    String message;
-                                                    switch(statusCode)
+                                                    int status = response.getInt("status");
+                                                    util.simpleStatusAlert(status);
+                                                    if(status==200)
                                                     {
-                                                        case 200:
-                                                            productsAdded++;
-                                                            message = "Producto agregado al carrito";
-                                                            break;
-                                                        default:
-                                                            message = "Error desconocido";
-                                                            break;
+                                                        search.setText("");
+                                                        products.clear();
+                                                        adapter.notifyDataSetChanged();
                                                     }
-                                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                                                 } catch (JSONException e) {
-                                                    Toast.makeText(getApplicationContext(),"Error en el servidor",Toast.LENGTH_SHORT).show();
-                                                    e.printStackTrace();
+                                                    util.snack("Error en respuesta");
                                                 }
-
                                             }
                                         },
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Toast.makeText(getApplicationContext(),"No se pudo agregar",Toast.LENGTH_SHORT).show();
+                                                util.snack("No se pudo eliminar el producto");
                                             }
                                         }
                                 );
 
-                                RequestQueue queue = Volley.newRequestQueue(AddProduct.this);
+                                RequestQueue queue = Volley.newRequestQueue(EditProduct.this);
                                 queue.add(request);
-                                search.setText("");
                             }
-                        }
+                        });
+
+                        nAlert.show();
                     }
                 });
 
-                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
-                    }
-                });
                 alert.show();
-            }
-        });
-
-        FloatingActionButton fab = findViewById(R.id.searchReady);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent data = new Intent();
-                data.setData(Uri.parse(productsAdded.toString()));
-                setResult(RESULT_OK, data);
-                finish();
             }
         });
 
@@ -169,7 +171,7 @@ public class AddProduct extends AppCompatActivity
                     products.clear();
                     String searchQuery = charSequence.toString();
                     String url;
-                    if(isCode(searchQuery) && !searchQuery.contains("."))
+                    if(util.isCode(searchQuery) && !searchQuery.contains("."))
                     {
                         url = server + "searchByCode.php?code="+searchQuery;
                     }
@@ -215,7 +217,7 @@ public class AddProduct extends AppCompatActivity
                                 }
                             }
                     );
-                    RequestQueue queue = Volley.newRequestQueue(AddProduct.this);
+                    RequestQueue queue = Volley.newRequestQueue(EditProduct.this);
 
                     queue.add(request);
                 }
@@ -226,36 +228,14 @@ public class AddProduct extends AppCompatActivity
 
             }
         });
+
+        FloatingActionButton fab = findViewById(R.id.returnFromEdit);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
-    public boolean isCode(String strNum) {
-        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-        if (strNum == null) {
-            return false;
-        }
-        return pattern.matcher(strNum).matches();
-    }
-
-    private String getServer()
-    {
-        SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        String server = "http://"+preferences.getString("server","localhost")+"/POSystem/";
-        return server;
-    }
-
-    private String getCashier()
-    {
-        SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        String cashier = preferences.getString("cashier","Ivan");
-        return cashier;
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        Intent data = new Intent();
-        data.setData(Uri.parse(productsAdded.toString()));
-        setResult(RESULT_OK, data);
-        finish();
-    }
 }

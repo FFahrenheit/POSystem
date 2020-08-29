@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,19 +42,30 @@ public class NewProduct extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        vCode = findViewById(R.id.newProductCode);
+        vName = findViewById(R.id.newProductName);
+        vStock = findViewById(R.id.newProductStock);
+        vPrice = findViewById(R.id.newProductPrice);
+        vEsp = findViewById(R.id.newProductEsp);
+
         Intent rx = getIntent();
         isEdit = rx.getBooleanExtra("edit",false);
         if(isEdit)
         {
             originalCode = rx.getStringExtra("code");
-            ((TextView)findViewById(R.id.newProductLabel)).setText("Editar producto");
-        }
+            vCode.setText(originalCode);
+            vName.setText(rx.getStringExtra("name"));
+            vStock.setText(rx.getStringExtra("stock"));
+            vPrice.setText(rx.getStringExtra("price"));
+            vEsp.setSelection((rx.getStringExtra("esp").contains("iez")? 0 : 1));
 
-        vName = findViewById(R.id.newProductName);
-        vCode = findViewById(R.id.newProductCode);
-        vStock = findViewById(R.id.newProductStock);
-        vPrice = findViewById(R.id.newProductPrice);
-        vEsp = findViewById(R.id.newProductEsp);
+            ((TextView)findViewById(R.id.newProductLabel)).setText("Editar producto");
+            if(originalCode.length()<8)
+            {
+                vCode.setFocusable(false);
+                vCode.setClickable(false);
+            }
+        }
 
         FloatingActionButton save = findViewById(R.id.newProductSave);
         save.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +78,7 @@ public class NewProduct extends AppCompatActivity {
                     return;
                 }
                 String code = vCode.getText().toString();
-                if(!isNumber(code) || code.contains("."))
+                if(!code.equals("") && (!isNumber(code) || code.contains(".")))
                 {
                     Snackbar.make(view, "Codigo no valido. Recuerde dejar vacio si no tiene codigo", Snackbar.LENGTH_LONG).show();
                     return;
@@ -87,13 +97,24 @@ public class NewProduct extends AppCompatActivity {
                 String esp = vEsp.getSelectedItem().toString();
                 if(stock.contains(".") && esp.equals("Pieza(s)"))
                 {
-                    Snackbar.make(view, "Ingrese piezas enteras", Snackbar.LENGTH_LONG).show();
-                    return;
+                    Double val = Double.parseDouble(stock);
+                    if(val != Math.floor(val))
+                    {
+                        Snackbar.make(view, "Ingrese piezas enteras sin punto", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
                 }
                 esp = esp.equals("Pieza(s)")? "pieza" : "granel";
                 ProductItem item = new ProductItem(code,name,Double.parseDouble(stock),Double.parseDouble(price),esp);
                 String url = isEdit ? "editProduct.php" : "newProduct.php";
                 url = getServer() + url + item.getGET();
+                if(isEdit)
+                {
+                    url += "&old="+originalCode;
+                }
+
+                vName.setText(url);
+
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.GET,
                         url,
@@ -109,7 +130,13 @@ public class NewProduct extends AppCompatActivity {
                                             Snackbar.make(vName, "Producto guardado", Snackbar.LENGTH_LONG).show();
                                             if(isEdit)
                                             {
-                                                finish();
+                                                Snackbar.make(vName, "Producto modificado", Snackbar.LENGTH_INDEFINITE)
+                                                        .setAction("Regresar", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                finish();
+                                                            }
+                                                        }).show();
                                             }
                                             else
                                             {

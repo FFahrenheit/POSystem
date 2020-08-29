@@ -11,9 +11,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EditProduct"
+            android:label="Editar inventario"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".NewProduct"
             android:label="Agregar producto"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddProduct"
             android:label="Agregar productos"

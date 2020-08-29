@@ -122,11 +122,16 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Toast.makeText(getApplicationContext(),"Jeje"+item.getItemId(),Toast.LENGTH_SHORT).show();
+                Intent intent;
                 switch (item.getItemId())
                 {
                     case R.id.nav_addP:
-                        Intent intent = new Intent(MainActivity.this, NewProduct.class);
+                        intent = new Intent(MainActivity.this, NewProduct.class);
                         intent.putExtra("edit",false);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_editP:
+                        intent = new Intent(MainActivity.this,EditProduct.class);
                         startActivity(intent);
                         break;
                     default:
@@ -459,7 +464,7 @@ public class MainActivity extends AppCompatActivity{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Snackbar.make(productList, "El carrito no pudo ser cargado", Snackbar.LENGTH_LONG)
+                        Snackbar.make(productList, "El carrito no pudo ser cargado", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Reintentar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

@@ -21,6 +21,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_add_product">AddProduct</string>
     <string name="title_activity_new_product">NewProduct</string>
+    <string name="title_activity_edit_product">EditProduct</string>
     <string-array name="esp">
         <item>Pieza(s)</item>
         <item>Granel</item>

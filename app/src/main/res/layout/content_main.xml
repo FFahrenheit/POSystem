@@ -43,7 +43,7 @@
                 android:id="@+id/itemsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:textSize="18dp"
                 android:text="Total de productos: 0"
                 android:textAlignment="textStart"
                 android:layout_marginLeft="20dp"
@@ -54,8 +54,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="$0.00"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:layout_marginRight="20dp"
+                android:textColor="#000000"
                 android:textAlignment="textEnd"/>
         </android.support.v7.widget.LinearLayoutCompat>
         <ListView

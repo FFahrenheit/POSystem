@@ -63,10 +63,10 @@ public class ProductItem
     }
 
     public String getEsp() {
-        return esp;
+        return (esp.equals("pieza"))? esp+"s" : esp;
     }
 
     public void setEsp(String esp) {
-        this.esp = (esp.equals("pieza"))? esp+"s" : esp;
+        this.esp = esp;
     }
 }
