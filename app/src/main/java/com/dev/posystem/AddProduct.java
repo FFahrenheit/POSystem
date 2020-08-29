@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -85,7 +85,7 @@ public class AddProduct extends AppCompatActivity
                         if(isCode(edittext.getText().toString())) {
                             Double value = Double.parseDouble(edittext.getText().toString());
                             if (value > products.get(itemPosition).getStock()) {
-                                Toast.makeText(getApplicationContext(), "No hay suficiente stock", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(search,"No hay suficiente stock",Snackbar.LENGTH_LONG).show();
                             }
                             else
                             {
@@ -111,9 +111,9 @@ public class AddProduct extends AppCompatActivity
                                                             message = "Error desconocido";
                                                             break;
                                                     }
-                                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                                                    Snackbar.make(search,message,Snackbar.LENGTH_LONG).show();
                                                 } catch (JSONException e) {
-                                                    Toast.makeText(getApplicationContext(),"Error en el servidor",Toast.LENGTH_SHORT).show();
+                                                    Snackbar.make(search,"Error en el servidor",Snackbar.LENGTH_LONG).show();
                                                     e.printStackTrace();
                                                 }
 
@@ -122,7 +122,7 @@ public class AddProduct extends AppCompatActivity
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Toast.makeText(getApplicationContext(),"No se pudo agregar",Toast.LENGTH_SHORT).show();
+                                                Snackbar.make(search,"No se pudo agregar",Snackbar.LENGTH_LONG).show();
                                             }
                                         }
                                 );
@@ -137,7 +137,7 @@ public class AddProduct extends AppCompatActivity
 
                 alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(search,"Operacion cancelada",Snackbar.LENGTH_SHORT).show();
                     }
                 });
                 alert.show();
@@ -158,7 +158,8 @@ public class AddProduct extends AppCompatActivity
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
 
             }
 
@@ -166,58 +167,7 @@ public class AddProduct extends AppCompatActivity
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length() >= 2)
                 {
-                    products.clear();
-                    String searchQuery = charSequence.toString();
-                    String url;
-                    if(isCode(searchQuery) && !searchQuery.contains("."))
-                    {
-                        url = server + "searchByCode.php?code="+searchQuery;
-                    }
-                    else
-                    {
-                        url = server + "searchByName.php?name="+searchQuery;
-                    }
-                    final JsonArrayRequest request = new JsonArrayRequest(
-                            Request.Method.GET,
-                            url,
-                            null,
-                            new Response.Listener<JSONArray>() {
-                                @Override
-                                public void onResponse(JSONArray response) {
-                                    try
-                                    {
-                                        products.clear();
-                                        for (int i = 0; i <  response.length(); i++)
-                                        {
-                                            JSONObject product = response.getJSONObject(i);
-                                            ProductItem item = new ProductItem();
-                                            item.setCodeBar(product.getString("codigo"));
-                                            item.setName(product.getString("descripcion"));
-                                            item.setEsp(product.getString("especificacion"));
-                                            item.setPrice(product.getDouble("precio"));
-                                            item.setStock(product.getDouble("stock"));
-
-                                            products.add(item);
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                    catch(JSONException e)
-                                    {
-                                        Toast.makeText(getApplicationContext(),"No se encontraron resultados",Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
-                                    }
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(),"No se pudieron recibir resultados",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                    RequestQueue queue = Volley.newRequestQueue(AddProduct.this);
-
-                    queue.add(request);
+                    searchProducts(charSequence.toString());
                 }
             }
 
@@ -257,5 +207,66 @@ public class AddProduct extends AppCompatActivity
         data.setData(Uri.parse(productsAdded.toString()));
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    private void searchProducts(final String searchQuery)
+    {
+        products.clear();
+        String url;
+        if(isCode(searchQuery) && !searchQuery.contains("."))
+        {
+            url = server + "searchByCode.php?code="+searchQuery;
+        }
+        else
+        {
+            url = server + "searchByName.php?name="+searchQuery;
+        }
+        final JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try
+                        {
+                            products.clear();
+                            for (int i = 0; i <  response.length(); i++)
+                            {
+                                JSONObject product = response.getJSONObject(i);
+                                ProductItem item = new ProductItem();
+                                item.setCodeBar(product.getString("codigo"));
+                                item.setName(product.getString("descripcion"));
+                                item.setEsp(product.getString("especificacion"));
+                                item.setPrice(product.getDouble("precio"));
+                                item.setStock(product.getDouble("stock"));
+
+                                products.add(item);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                        catch(JSONException e)
+                        {
+                            Snackbar.make(search,"No se encontraron resultados",Snackbar.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Snackbar.make(search,"No se pudieron recibir los resultados",Snackbar.LENGTH_LONG)
+                                .setAction("Reintentar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        searchProducts(searchQuery);
+                                    }
+                                }).show();
+                    }
+                }
+        );
+        RequestQueue queue = Volley.newRequestQueue(AddProduct.this);
+
+        queue.add(request);
     }
 }
