@@ -138,6 +138,10 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent;
                 switch (item.getItemId())
                 {
+                    case R.id.nav_reports_daily:
+                        intent = new Intent(MainActivity.this, DailyReport.class);
+                        startActivity(intent);
+                        break;
                     case R.id.nav_addP:
                         intent = new Intent(MainActivity.this, NewProduct.class);
                         intent.putExtra("edit",false);

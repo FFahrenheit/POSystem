@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp">
+        <TextView
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reporte diario. Seleccione el dia"
+            android:textSize="18dp"
+            android:textAlignment="center">
+        </TextView>
+        <Button
+            android:id="@+id/dailyReportButton"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar fecha">
+        </Button>
+        <TextView
+            android:id="@+id/dailyReportDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:hint="Fecha">
+        </TextView>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:textSize="20dp"
+                android:text="Total vendido:"
+                android:textAlignment="textEnd">
+            </TextView>
+            <TextView
+                android:id="@+id/dailyReportTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:textSize="20dp"
+                android:hint="$0.0">
+            </TextView>
+        </LinearLayout>
+        <ListView
+            android:id="@+id/dailyReportList"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"></ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="100dp"
+            android:id="@+id/dailyReportEmpty"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:text="No hay ventas registradas"></TextView>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
