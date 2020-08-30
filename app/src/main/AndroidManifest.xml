@@ -18,8 +18,7 @@
             ></activity>
         <activity
             android:name=".PayAccount"
-            android:label="Pagar cuenta"
-            android:parentActivityName=".MainActivity"
+            android:label="Cuenta final"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddInventory"

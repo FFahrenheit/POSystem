@@ -11,6 +11,7 @@ public class Sale
     private Double paid;
     private String cashier;
     private Integer productCount;
+    public String json="";
 
     public Sale(JSONObject sale) throws JSONException {
         productCount = sale.getInt("products");
@@ -19,6 +20,7 @@ public class Sale
         pk = sale.getInt("pk");
         time = sale.getString("date");
         cashier = sale.getString("cashier");
+        json = sale.toString();
     }
 
     public String getCashier() {

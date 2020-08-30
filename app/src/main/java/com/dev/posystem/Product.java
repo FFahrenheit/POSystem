@@ -1,13 +1,7 @@
 package com.dev.posystem;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Product
 {
@@ -18,6 +12,17 @@ public class Product
     private Double total;
     private Integer primaryKey;
     private String esp="pieza";
+
+    public Product(JSONObject product) throws JSONException
+    {
+        this.setName(product.getString("name"));
+        this.setEsp(product.getString("esp"));
+        this.setPrimaryKey(product.getInt("pk"));
+        this.setQuantity(product.getDouble("qty"));
+        this.setCodeBar(product.getString("code"));
+        this.setPrice(product.getDouble("price"));
+        this.setTotal(this.getPrice() * this.getQuantity());
+    }
 
     public Product()
     {

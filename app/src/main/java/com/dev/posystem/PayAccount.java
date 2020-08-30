@@ -1,6 +1,7 @@
 package com.dev.posystem;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,6 +44,9 @@ public class PayAccount extends AppCompatActivity
     private ListView ticketList;
     private Utilities util;
 
+    private boolean paid = false;
+    private Sale paidSale = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,6 +70,30 @@ public class PayAccount extends AppCompatActivity
         ticketList.setAdapter(adapter);
         util = new Utilities(getApplicationContext(),ticketChange);
 
+        Intent receive = getIntent();
+        paid = receive.getBooleanExtra("paid",false);
+        if(paid)
+        {
+            try
+            {
+                paidSale = new Sale(new JSONObject(receive.getStringExtra("sale")));
+                ticketPaid.setText(paidSale.getPaid().toString());
+                Double cash = Double.parseDouble(ticketPaid.getText().toString());
+                Double change  = cash - adapter.getTotal();
+                ticketChange.setText("$"+String.format("%.2f",change));
+                if(change>=0)
+                {
+                    ticketChange.setTextColor(Color.GREEN);
+                }
+                else
+                {
+                    ticketChange.setTextColor(Color.RED);
+                }
+                setPaid();
+            } catch (JSONException e) {
+                util.snack("No se pudo recibir la venta");
+            }
+        }
         initTicket();
 
         ticketPaid.addTextChangedListener(new TextWatcher() {
@@ -132,7 +161,15 @@ public class PayAccount extends AppCompatActivity
 
     private void initTicket()
     {
-        String url = util.getServer() + "getCart.php?user="+util.getCashier();
+        String url;
+        if(paid)
+        {
+            url = util.getServer() + "getSale.php?pk="+paidSale.getPk();
+        }
+        else
+        {
+            url = util.getServer() + "getCart.php?user="+util.getCashier();
+        }
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -197,6 +234,11 @@ public class PayAccount extends AppCompatActivity
 
     private void pay()
     {
+        if(paid)
+        {
+            util.snack("Esta venta esta cerrada");
+            return;
+        }
         AlertDialog.Builder alert = new AlertDialog.Builder(PayAccount.this);
 
         alert.setMessage("Confirma la venta de "+adapter.getCount()+" productos por $"+adapter.getTotal());
@@ -226,10 +268,8 @@ public class PayAccount extends AppCompatActivity
                                                     }
                                                 }).show();
 
-                                        ticketPay.setFocusable(false);
-                                        ticketPay.setClickable(false);
-                                        ticketPaid.setFocusable(false);
-                                        ticketPaid.setFocusable(false);
+                                        setPaid();
+                                        paid = true;
                                     }
                                     else
                                     {
@@ -273,5 +313,26 @@ public class PayAccount extends AppCompatActivity
             }
         });
         alert.show();
+    }
+
+    private void setPaid()
+    {
+        ticketPay.setFocusable(false);
+        ticketPay.setClickable(false);
+        ticketPaid.setFocusable(false);
+        ticketPaid.setFocusable(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

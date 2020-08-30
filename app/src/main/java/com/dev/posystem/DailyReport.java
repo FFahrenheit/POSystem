@@ -1,12 +1,15 @@
 package com.dev.posystem;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -133,6 +136,14 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
                                 sales.add(saleC);
                             }
                             total.setText("$"+adapter.getTotal());
+                            if(adapter.getTotal()>0)
+                            {
+                                total.setTextColor(Color.GREEN);
+                            }
+                            else
+                            {
+                                total.setTextColor(Color.RED);
+                            }
                             adapter.notifyDataSetChanged();
                         }
                         catch(JSONException e)
@@ -152,6 +163,17 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
         queue.add(request);
 
         adapter.notifyDataSetChanged();
+
+        salesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View itemView, final int itemPosition, long itemId)
+            {
+                Intent intent = new Intent(DailyReport.this, PayAccount.class);
+                intent.putExtra("paid",true);
+                intent.putExtra("sale",sales.get(itemPosition).json);
+                startActivity(intent);
+            }
+        });
     }
 
     private String getFormated(Integer n)
