@@ -105,4 +105,24 @@
             android:id="@+id/action_Second5Fragment_to_First5Fragment"
             app:destination="@id/First5Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First6Fragment"
+        android:name="com.dev.posystem.First6Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first6">
+
+        <action
+            android:id="@+id/action_First6Fragment_to_Second6Fragment"
+            app:destination="@id/Second6Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second6Fragment"
+        android:name="com.dev.posystem.Second6Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second6">
+
+        <action
+            android:id="@+id/action_Second6Fragment_to_First6Fragment"
+            app:destination="@id/First6Fragment" />
+    </fragment>
 </navigation>

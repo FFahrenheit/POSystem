@@ -63,6 +63,14 @@
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"></ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="100dp"
+            android:id="@+id/emptyMain"
+            android:textSize="25dp"
+            android:textAlignment="center"
+            android:text="Agregue articulos a la cuenta"></TextView>
     </android.support.v7.widget.LinearLayoutCompat>
 
 

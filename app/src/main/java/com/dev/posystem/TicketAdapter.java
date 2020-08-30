@@ -56,7 +56,7 @@ public class TicketAdapter extends BaseAdapter
         tvn.setText("$"+products.get(i).getPrice());
 
         tvn =  v.findViewById(R.id.ticketPrice);
-        tvn.setText("Cantidad: "+products.get(i).getTotal());
+        tvn.setText(products.get(i).getTotal().toString());
 
         return v;
     }

@@ -6,6 +6,17 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Utilities
@@ -51,25 +62,28 @@ public class Utilities
         Snackbar.make(someView, message, Snackbar.LENGTH_LONG).show();
     }
 
-    public void simpleStatusAlert(int status)
+    public String simpleStatusAlert(int status)
     {
+        String message;
         switch (status)
         {
             case 200:
-                snack("Operacion completada con exito");
+                message = "Operacion completada con exito";
                 break;
             case 100:
-                snack("Error al conectar a la base de datos");
+                message = ("Error al conectar a la base de datos");
                 break;
             case 101:
-                snack("Error al realizar la operacion");
+                message = ("Error al realizar la operacion");
                 break;
             case 102:
-                snack("Se realizo la operacion pero no se registro en el historial");
+                message = ("Se realizo la operacion pero no se registro en el historial");
                 break;
             default:
-                snack("Error desconocido");
+                message = "Error desconocido";
                 break;
         }
+        snack(message);
+        return message;
     }
 }

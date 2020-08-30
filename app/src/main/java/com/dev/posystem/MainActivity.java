@@ -45,6 +45,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -76,6 +77,9 @@ public class MainActivity extends AppCompatActivity{
         productAdapter.products = products;
         productList.setAdapter(productAdapter);
 
+        final TextView emptyView = findViewById(R.id.emptyMain);
+        productList.setEmptyView(emptyView);
+
         FloatingActionButton fab = findViewById(R.id.finishSale);
         FloatingActionButton addProduct = findViewById(R.id.addProduct);
 
@@ -101,7 +105,16 @@ public class MainActivity extends AppCompatActivity{
                             public void onClick(View view) {
                                 updateList();
                             }
-                        }).show();
+                        }); //Keep for future references
+                if(productAdapter.products.size()>0)
+                {
+                    Intent intent = new Intent(MainActivity.this, PayAccount.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Snackbar.make(totalPrice,"Ingrese productos para poder pagar",Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -183,10 +196,11 @@ public class MainActivity extends AppCompatActivity{
                                                 product.setName(response.getString("name"));
                                                 product.setPrice(response.getDouble("price"));
                                                 product.setQuantity(1.0);
-                                                product.setPrimaryKey(response.getInt("pk"));
+                                                product.setPrimaryKey(Integer.parseInt(response.getString("pk")));
                                                 product.setTotal(product.getPrice());
                                                 productAdapter.products.add(product);
                                                 productAdapter.notifyDataSetChanged();
+                                                Toast.makeText(getApplicationContext(),product.getName()+" agregado",Toast.LENGTH_SHORT).show();
                                                 updateBarcode();
                                                 updateCart();
                                                 break;
@@ -208,7 +222,7 @@ public class MainActivity extends AppCompatActivity{
                                         }
                                         if(statusCode[0]!=200)
                                         {
-                                            Toast.makeText(MainActivity.this,message,Toast.LENGTH_LONG).show();
+                                            Snackbar.make(emptyView,message,Snackbar.LENGTH_LONG).show();
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -218,7 +232,7 @@ public class MainActivity extends AppCompatActivity{
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(MainActivity.this,"No se pudo ejecutar la operacion",Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(emptyView,"No se pudo ejecutar la operacion",Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                     );
@@ -308,7 +322,6 @@ public class MainActivity extends AppCompatActivity{
                     public void onClick(DialogInterface dialog, int whichButton) {
                         {
                             String url = getServer() + "deleteArticle.php?pk="+products.get(itemPosition).getPrimaryKey();
-
                             JsonObjectRequest request = new JsonObjectRequest(
                                     Request.Method.GET,
                                     url,
@@ -489,6 +502,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        updateList();
         barcode.setSelection(0);
         barcode.requestFocus();
         getWindow().setSoftInputMode(
@@ -498,5 +512,11 @@ public class MainActivity extends AppCompatActivity{
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
+    }
+
+    public void refresh(MenuItem menuItem)
+    {
+        updateList();
+        Snackbar.make(productList,"Carrito refrescado",Snackbar.LENGTH_SHORT).show();
     }
 }

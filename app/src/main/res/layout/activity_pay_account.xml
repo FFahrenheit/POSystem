@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".PayAccount">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/finishSale"
+        android:id="@+id/ticketConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -30,7 +30,7 @@
         />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addProduct"
+        android:id="@+id/ticketReturn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
@@ -40,10 +40,10 @@
         android:layout_marginRight="0dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:src="@drawable/ic_add"
-        app:layout_anchor="@id/finishSale"
+        android:src="@drawable/ic_return"
+        app:layout_anchor="@id/ticketConfirm"
         app:layout_anchorGravity="top" />
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_pay_account" />
 
 </android.support.design.widget.CoordinatorLayout>

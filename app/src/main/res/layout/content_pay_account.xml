@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginVertical="10dp">
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/ticketProductCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="Total de productos: 0"
+                android:textAlignment="textStart"
+                android:layout_marginLeft="20dp"
+                />
+            <TextView
+                android:id="@+id/ticketTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="$0.00"
+                android:textSize="25dp"
+                android:layout_marginRight="20dp"
+                android:textColor="#000000"
+                android:textAlignment="textEnd"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ticketPaid"
+            android:hint="Su pago"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:inputType="numberDecimal">
+        </android.support.design.widget.TextInputEditText>
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Su cambio: "
+                android:textSize="20dp"
+                android:textAlignment="textEnd"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/ticketChange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:textSize="20dp"
+                android:hint="Cambio">
+            </TextView>
+        </android.support.v7.widget.LinearLayoutCompat>
+        <ListView
+            android:id="@+id/ticketList"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"></ListView>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.constraint.ConstraintLayout>

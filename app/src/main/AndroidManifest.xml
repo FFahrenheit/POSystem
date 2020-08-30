@@ -11,9 +11,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".AddInventory"
-            android:label="@string/title_activity_add_inventory"
+            android:name=".PayAccount"
+            android:label="Pagar cuenta"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".AddInventory"
+            android:label="Consultar y agregar inventario"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EditProduct"
             android:label="Editar inventario"
