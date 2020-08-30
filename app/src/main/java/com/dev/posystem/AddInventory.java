@@ -74,6 +74,10 @@ public class AddInventory extends AppCompatActivity
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         String addedStock = edittext.getText().toString();
+                        if(addedStock.charAt(0)=='.')
+                        {
+                            addedStock = "0"+addedStock;
+                        }
                         if(addedStock.contains("-"))
                         {
                             Snackbar.make(search, "Ingrese stock positivo", Snackbar.LENGTH_LONG).show();
@@ -87,6 +91,11 @@ public class AddInventory extends AppCompatActivity
                                 Snackbar.make(search, "Ingrese piezas enteras", Snackbar.LENGTH_LONG).show();
                                 return;
                             }
+                        }
+                        if(!util.isCode(addedStock))
+                        {
+                            util.snack("Ingrese un numero valido");
+                            return;
                         }
 
                         String url = server + "addInventory.php?pk="+products.get(itemPosition).getCodeBar()+"&add="+addedStock;

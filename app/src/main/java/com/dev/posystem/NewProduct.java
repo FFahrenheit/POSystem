@@ -3,7 +3,6 @@ package com.dev.posystem;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -87,12 +86,20 @@ public class NewProduct extends AppCompatActivity {
                     return;
                 }
                 String stock = vStock.getText().toString();
+                if(stock.charAt(0)=='.')
+                {
+                    stock = "0"+stock;
+                }
                 if(!isNumber(stock))
                 {
                     Snackbar.make(view, "Stock no valido", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 String price = vPrice.getText().toString();
+                if(price.charAt(0)=='.')
+                {
+                    price = '0'+price;
+                }
                 if(!isNumber(stock)) {
                     Snackbar.make(view, "Precio invalido", Snackbar.LENGTH_LONG).show();
                     return;

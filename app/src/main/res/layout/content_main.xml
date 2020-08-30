@@ -26,7 +26,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Codigo de barras"
+            android:hint="Código de barras"
             android:maxLines="1"
             android:id="@+id/scannerCode"
             android:inputType="number"
@@ -70,7 +70,7 @@
             android:id="@+id/emptyMain"
             android:textSize="25dp"
             android:textAlignment="center"
-            android:text="Agregue articulos a la cuenta"></TextView>
+            android:text="Agregue artículos a la cuenta"></TextView>
     </android.support.v7.widget.LinearLayoutCompat>
 
 

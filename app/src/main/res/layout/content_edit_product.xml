@@ -11,7 +11,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre del producto o codigo"
+            android:hint="Nombre del producto o código"
             android:maxLines="1"
             android:textSize="18dp"
             android:id="@+id/searchEditProduct"

@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +46,7 @@ public class AddProduct extends AppCompatActivity
     private ProductItemAdapter adapter;
     private String server;
     private String cashier;
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class AddProduct extends AppCompatActivity
         adapter.products = products;
         searchResults.setAdapter(adapter);
 
+        emptyView = findViewById(R.id.emptySearch);
+        searchResults.setEmptyView(emptyView);
+
         server = getServer();
         cashier = getCashier();
 
@@ -84,10 +89,107 @@ public class AddProduct extends AppCompatActivity
                 alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton)
                     {
+                        if(edittext.getText().toString().charAt(0)=='.')
+                        {
+                            edittext.setText("0"+edittext.getText());
+                        }
                         if(isCode(edittext.getText().toString())) {
                             Double value = Double.parseDouble(edittext.getText().toString());
+                            String addedStock = value.toString();
+                            if(addedStock.contains("-"))
+                            {
+                                Snackbar.make(search, "Ingrese stock positivo", Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                            if(addedStock.contains(".") && products.get(itemPosition).getEsp().contains("ieza"))
+                            {
+                                Double val = Double.parseDouble(addedStock);
+                                if(val != Math.floor(val))
+                                {
+                                    Snackbar.make(search, "Ingrese piezas enteras", Snackbar.LENGTH_LONG).show();
+                                    return;
+                                }
+                            }
+
                             if (value > products.get(itemPosition).getStock()) {
-                                Snackbar.make(search,"No hay suficiente stock",Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(search,"No hay suficiente stock",Snackbar.LENGTH_LONG).setAction("Agregar stock",
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                final Utilities util = new Utilities(getApplicationContext(),search);
+                                                AlertDialog.Builder alert = new AlertDialog.Builder(AddProduct.this);
+                                                final EditText edittext = new EditText(AddProduct.this);
+                                                edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
+                                                        InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                                                        InputType.TYPE_NUMBER_FLAG_SIGNED);
+                                                alert.setMessage("Ingrese el stock a agregar");
+                                                alert.setTitle("Agregar "+products.get(itemPosition).getName());
+
+                                                alert.setView(edittext);
+
+                                                alert.setPositiveButton("Agregar stock", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i)
+                                                    {
+                                                        String addedStock = edittext.getText().toString();
+                                                        if(addedStock.contains("-"))
+                                                        {
+                                                            Snackbar.make(search, "Ingrese stock positivo", Snackbar.LENGTH_LONG).show();
+                                                            return;
+                                                        }
+                                                        if(addedStock.contains(".") && products.get(itemPosition).getEsp().contains("ieza"))
+                                                        {
+                                                            Double val = Double.parseDouble(addedStock);
+                                                            if(val != Math.floor(val))
+                                                            {
+                                                                Snackbar.make(search, "Ingrese piezas enteras", Snackbar.LENGTH_LONG).show();
+                                                                return;
+                                                            }
+                                                        }
+
+                                                        String url = server + "addInventory.php?pk="+products.get(itemPosition).getCodeBar()+"&add="+addedStock;
+                                                        JsonObjectRequest request = new JsonObjectRequest(
+                                                                Request.Method.GET,
+                                                                url,
+                                                                null,
+                                                                new Response.Listener<JSONObject>() {
+                                                                    @Override
+                                                                    public void onResponse(JSONObject response) {
+                                                                        try {
+                                                                            int status = response.getInt("status");
+                                                                            util.simpleStatusAlert(status);
+                                                                            if(status==200)
+                                                                            {
+                                                                                searchProducts(search.getText().toString());
+                                                                            }
+                                                                        } catch (JSONException e) {
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                    }
+                                                                },
+                                                                new Response.ErrorListener() {
+                                                                    @Override
+                                                                    public void onErrorResponse(VolleyError error) {
+                                                                        util.snack("No se pudo completar la peticion");
+                                                                    }
+                                                                }
+                                                        );
+
+                                                        RequestQueue queue = Volley.newRequestQueue(AddProduct.this);
+                                                        queue.add(request);
+                                                    }
+                                                });
+
+                                                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        util.snack("Operacion cancelada");
+                                                    }
+                                                });
+
+                                                alert.show();
+                                            }
+                                        }).show();
                             }
                             else
                             {
@@ -134,6 +236,10 @@ public class AddProduct extends AppCompatActivity
                                 search.setText("");
                             }
                         }
+                        else
+                        {
+                            Snackbar.make(search,"Ingrese un numero valido",Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -170,6 +276,10 @@ public class AddProduct extends AppCompatActivity
                 if(charSequence.length() >= 2)
                 {
                     searchProducts(charSequence.toString());
+                }
+                else
+                {
+                    emptyView.setText("Realice su busqueda");
                 }
             }
 
@@ -247,6 +357,10 @@ public class AddProduct extends AppCompatActivity
                         try
                         {
                             products.clear();
+                            if(response.length()<=0)
+                            {
+                                emptyView.setText("No se encontraron resultados");
+                            }
                             for (int i = 0; i <  response.length(); i++)
                             {
                                 JSONObject product = response.getJSONObject(i);

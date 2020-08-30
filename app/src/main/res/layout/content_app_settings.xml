@@ -23,7 +23,7 @@
             android:layout_marginTop="10dp"
             android:textSize="20dp"
             android:textAlignment="textStart"
-            android:text="Direccion de servidor: "
+            android:text="Dirección de servidor: "
             android:textColor="#302f2f"/>
         <TextView
             android:layout_width="match_parent"
