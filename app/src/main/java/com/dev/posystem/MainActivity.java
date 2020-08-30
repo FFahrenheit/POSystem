@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity{
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home)
                 .setDrawerLayout(drawer)
@@ -382,6 +381,7 @@ public class MainActivity extends AppCompatActivity{
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
+
     }
 
     @Override
@@ -473,13 +473,25 @@ public class MainActivity extends AppCompatActivity{
                                 prod.setTotal(prod.getPrice() * prod.getQuantity());
                                 products.add(prod);
                             }
-                            productAdapter.notifyDataSetChanged();
-                            updateCart();
+                            if(products.size()>0)
+                            {
+                                productAdapter.notifyDataSetChanged();
+                                updateCart();
+                            }
+                            else
+                            {
+                                Snackbar.make(productList, "Carrito cargado", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                         catch(JSONException e)
                         {
-                            e.printStackTrace();
-                        }
+                            Snackbar.make(productList, "El carrito no pudo ser cargado", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Reintentar", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            updateList();
+                                        }
+                                    }).show();                        }
                     }
                 },
                 new Response.ErrorListener() {

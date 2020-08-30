@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -51,6 +52,7 @@ public class AddProduct extends AppCompatActivity
         setContentView(R.layout.activity_add_product);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productsAdded = 0;
 
@@ -198,6 +200,20 @@ public class AddProduct extends AppCompatActivity
         SharedPreferences preferences = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         String cashier = preferences.getString("cashier","Ivan");
         return cashier;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent data = new Intent();
+                data.setData(Uri.parse(productsAdded.toString()));
+                setResult(RESULT_OK, data);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

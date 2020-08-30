@@ -11,30 +11,30 @@
         android:orientation="horizontal">
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/ticketQty"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".15"
+            android:layout_weight=".13"
             android:textAlignment="center">
         </android.support.v7.widget.AppCompatAutoCompleteTextView>
        <android.support.v7.widget.AppCompatAutoCompleteTextView
            android:id="@+id/ticketProduct"
-           android:layout_width="wrap_content"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
-           android:layout_weight=".55"
+           android:layout_weight=".61"
            android:textAlignment="center">
        </android.support.v7.widget.AppCompatAutoCompleteTextView>
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/ticketPriceUnit"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".15"
+            android:layout_weight=".13"
             android:textAlignment="center">
         </android.support.v7.widget.AppCompatAutoCompleteTextView>
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/ticketPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".15"
+            android:layout_weight=".13"
             android:textAlignment="center">
         </android.support.v7.widget.AppCompatAutoCompleteTextView>
 

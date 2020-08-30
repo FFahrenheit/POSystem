@@ -44,6 +44,7 @@ public class AddInventory extends AppCompatActivity
         setContentView(R.layout.activity_add_inventory);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         search = findViewById(R.id.addInventorySearch);
         list = findViewById(R.id.addInventoryList);

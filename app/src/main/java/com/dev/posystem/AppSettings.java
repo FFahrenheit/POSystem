@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +28,8 @@ public class AppSettings extends AppCompatActivity {
         setContentView(R.layout.activity_app_settings);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         pref = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         editor = pref.edit();
         ipAddress = (TextView) findViewById(R.id.serverIP);
