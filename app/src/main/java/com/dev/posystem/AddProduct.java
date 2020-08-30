@@ -209,13 +209,18 @@ public class AddProduct extends AppCompatActivity
                                                     {
                                                         case 200:
                                                             productsAdded++;
-                                                            message = "Producto agregado al carrito";
+                                                            Snackbar.make(search,"Producto agregado",Snackbar.LENGTH_SHORT)
+                                                                    .setAction("Regresar", new View.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(View view) {
+                                                                            finish();
+                                                                        }
+                                                                    });
                                                             break;
                                                         default:
-                                                            message = "Error desconocido";
+                                                            Snackbar.make(search,"No se pudo agregar el producto",Snackbar.LENGTH_LONG).show();
                                                             break;
                                                     }
-                                                    Snackbar.make(search,message,Snackbar.LENGTH_LONG).show();
                                                 } catch (JSONException e) {
                                                     Snackbar.make(search,"Error en el servidor",Snackbar.LENGTH_LONG).show();
                                                     e.printStackTrace();

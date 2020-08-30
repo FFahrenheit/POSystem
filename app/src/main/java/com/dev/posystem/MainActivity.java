@@ -481,6 +481,7 @@ public class MainActivity extends AppCompatActivity{
                             else
                             {
                                 Snackbar.make(productList, "Carrito cargado", Snackbar.LENGTH_SHORT).show();
+                                updateCart();
                             }
                         }
                         catch(JSONException e)
@@ -515,6 +516,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         updateList();
+        updateCart();
         barcode.setSelection(0);
         barcode.requestFocus();
         getWindow().setSoftInputMode(

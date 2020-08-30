@@ -68,9 +68,9 @@
             android:layout_height="wrap_content"
             android:paddingVertical="100dp"
             android:id="@+id/emptyMain"
-            android:textSize="25dp"
+            android:textSize="16dp"
             android:textAlignment="center"
-            android:text="Agregue artículos a la cuenta"></TextView>
+            android:text="Aqui aparecerán los articulos de la cuenta. Escanee el codigo o agreguelo manualmentne con el boton de la esquina inferior derecha (+)"></TextView>
     </android.support.v7.widget.LinearLayoutCompat>
 
 
