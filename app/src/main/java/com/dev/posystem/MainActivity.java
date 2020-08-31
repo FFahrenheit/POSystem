@@ -180,9 +180,10 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                if(charSequence.length()>=8)   //Cambiar
+                if(charSequence.toString().contains("\n"))   //Cambiar
                 {
-                    String codeBar = charSequence.toString();
+                    barcode.setText("");
+                    String codeBar = charSequence.toString().substring(0,charSequence.length()-1);
                     final int[] statusCode = new int[1];
                     final Product product = new Product();
                     product.setCodeBar(codeBar);
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity{
                                                 message = "No hay suficiente stock";
                                                 break;
                                             case 102:
-                                                message = "Producto no registrado";
+                                                message = "Producto no encontrado";
                                                 break;
                                             default:
                                                 message = "Error desconocido";
