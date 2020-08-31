@@ -50,7 +50,7 @@ public class MonthYearPickerDialog extends DialogFragment {
         monthPicker.setValue(cal.get(Calendar.MONTH)+1);
 
         int year = cal.get(Calendar.YEAR);
-        yearPicker.setMinValue(year);
+        yearPicker.setMinValue(2020);
         yearPicker.setMaxValue(MAX_YEAR);
         yearPicker.setValue(year);
 

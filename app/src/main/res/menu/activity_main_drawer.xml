@@ -10,7 +10,43 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Agregar inventario" />
     </group>
-    <item android:title="Reportes">
+    <item android:title="Proveedores">
+        <menu>
+            <item
+                android:id="@+id/nav_provider_manage"
+                android:icon="@drawable/ic_ventas"
+                android:title="Gestionar proveedores" />
+            <item
+                android:id="@+id/nav_provider_add"
+                android:icon="@drawable/ic_month"
+                android:title="Agregar visita" />
+        </menu>
+    </item>
+    <item android:title="Reportes de utilidades">
+        <menu>
+            <item
+                android:id="@+id/nav_utilities_daily"
+                android:icon="@drawable/ic_ventas"
+                android:title="Ventas por dia" />
+            <item
+                android:id="@+id/nav_utilities_monthly"
+                android:icon="@drawable/ic_month"
+                android:title="Reportes mensuales" />
+        </menu>
+    </item>
+    <item android:title="Reportes de compras">
+        <menu>
+            <item
+                android:id="@+id/nav_buys_daily"
+                android:icon="@drawable/ic_ventas"
+                android:title="Compras del dia" />
+            <item
+                android:id="@+id/nav_buys_month"
+                android:icon="@drawable/ic_month"
+                android:title="Compras mensuales" />
+        </menu>
+    </item>
+    <item android:title="Reportes de ventas">
         <menu>
             <item
                 android:id="@+id/nav_reports_daily"

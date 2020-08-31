@@ -123,8 +123,6 @@ public class NewProduct extends AppCompatActivity {
                     url += "&old="+originalCode;
                 }
 
-                vName.setText(url);
-
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.GET,
                         url,
@@ -137,7 +135,13 @@ public class NewProduct extends AppCompatActivity {
                                     switch(status)
                                     {
                                         case 200:
-                                            Snackbar.make(vName, "Producto guardado", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(vName, "Producto guardado", Snackbar.LENGTH_LONG)
+                                                    .setAction("Aceptar", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            resetForm();
+                                                        }
+                                                    }).show();
                                             if(isEdit)
                                             {
                                                 Snackbar.make(vName, "Producto modificado", Snackbar.LENGTH_INDEFINITE)
