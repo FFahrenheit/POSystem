@@ -23,5 +23,13 @@
             android:id="@+id/addInventoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="100dp"
+            android:id="@+id/emptySearchAddInventory"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:text="No se encontraron resultados. Realice su busqueda"></TextView>
     </android.support.v7.widget.LinearLayoutCompat>
 </android.support.constraint.ConstraintLayout>

@@ -30,6 +30,6 @@
             android:id="@+id/emptySearch"
             android:textSize="18dp"
             android:textAlignment="center"
-            android:text="Realice su busqueda"></TextView>
+            android:text="No se encontraron resultados. Realice su busqueda"></TextView>
     </android.support.v7.widget.LinearLayoutCompat>
 </android.support.constraint.ConstraintLayout>

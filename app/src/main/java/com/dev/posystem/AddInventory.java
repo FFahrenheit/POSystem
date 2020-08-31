@@ -53,6 +53,7 @@ public class AddInventory extends AppCompatActivity
         adapter.context = getApplicationContext();
         adapter.products = products;
         list.setAdapter(adapter);
+        list.setEmptyView(findViewById(R.id.emptySearchAddInventory));
         util = new Utilities(getApplicationContext(),search);
         server = util.getServer();
 

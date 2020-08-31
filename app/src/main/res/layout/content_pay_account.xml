@@ -64,6 +64,45 @@
                 android:hint="Cambio">
             </TextView>
         </android.support.v7.widget.LinearLayoutCompat>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:textSize="10dp"
+                android:text = "Cantidad"
+                android:layout_height="wrap_content"
+                android:layout_weight=".13"
+                android:textAlignment="center">
+            </TextView>
+            <TextView
+                android:layout_width="0dp"
+                android:text="Producto"
+                android:layout_height="wrap_content"
+                android:layout_weight=".61"
+                android:textAlignment="center">
+            </TextView>
+            <TextView
+                android:layout_width="0dp"
+                android:text="P. u."
+                android:layout_height="wrap_content"
+                android:layout_weight=".13"
+                android:textAlignment="center">
+            </TextView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:layout_weight=".13"
+                android:textAlignment="center">
+            </TextView>
+
+        </LinearLayout>
+
         <ListView
             android:id="@+id/ticketList"
             android:layout_width="match_parent"

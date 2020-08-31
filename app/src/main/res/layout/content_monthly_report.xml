@@ -18,6 +18,7 @@
             android:textSize="18dp"
             android:textAlignment="center">
         </TextView>
+
         <Button
             android:id="@+id/monthlyReportButton"
             android:layout_margin="10dp"

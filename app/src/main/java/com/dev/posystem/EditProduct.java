@@ -55,6 +55,7 @@ public class EditProduct extends AppCompatActivity
 
         search = findViewById(R.id.searchEditProduct);
         searchResults = findViewById(R.id.searchEditList);
+        searchResults.setEmptyView(findViewById(R.id.emptySearchEditProduct));
 
         util = new Utilities(getApplicationContext(),search);
 

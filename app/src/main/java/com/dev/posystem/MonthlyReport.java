@@ -67,7 +67,20 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker.show();
+                //datePicker.show();   Alernativa 1
+                // /*
+                MonthYearPickerDialog pd = new MonthYearPickerDialog();
+                //pd.setDates(month,year);
+                pd.setListener(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        year =  i;
+                        month = i1-1;
+                        setSales(month,year);
+                    }
+                });
+                pd.show(getSupportFragmentManager(), "MonthYearPickerDialog");
+                // */ Alternativa 2
             }
         });
 
