@@ -145,4 +145,24 @@
             android:id="@+id/action_Second7Fragment_to_First7Fragment"
             app:destination="@id/First7Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First8Fragment"
+        android:name="com.dev.posystem.First8Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first8">
+
+        <action
+            android:id="@+id/action_First8Fragment_to_Second8Fragment"
+            app:destination="@id/Second8Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second8Fragment"
+        android:name="com.dev.posystem.Second8Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second8">
+
+        <action
+            android:id="@+id/action_Second8Fragment_to_First8Fragment"
+            app:destination="@id/First8Fragment" />
+    </fragment>
 </navigation>

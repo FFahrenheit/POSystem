@@ -46,16 +46,16 @@ public class ProductAdapter extends BaseAdapter
 
         View v = link.inflate(R.layout.product_card, null);
 
-        TextView tvn = (TextView) v.findViewById(R.id.productName);
+        TextView tvn = v.findViewById(R.id.productName);
         tvn.setText(products.get(i).getName());
 
-        tvn = (TextView) v.findViewById(R.id.productCode);
+        tvn =  v.findViewById(R.id.productCode);
         tvn.setText(products.get(i).getCodeBar());
 
-        tvn = (TextView) v.findViewById(R.id.productPrice);
+        tvn = v.findViewById(R.id.productPrice);
         tvn.setText("$"+products.get(i).getTotal());
 
-        tvn = (TextView) v.findViewById(R.id.productQuantity);
+        tvn = v.findViewById(R.id.productQuantity);
         tvn.setText("Cantidad: "+products.get(i).getQuantity());
 
         return v;

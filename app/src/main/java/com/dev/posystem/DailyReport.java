@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -83,9 +84,19 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
             }
         });
 
-        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        month = Calendar.getInstance().get(Calendar.MONTH);
-        year = Calendar.getInstance().get(Calendar.YEAR);
+        Intent rx = getIntent();
+        if(rx.getBooleanExtra("set",false))
+        {
+            day = rx.getIntExtra("day",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            month = rx.getIntExtra("month",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            year = rx.getIntExtra("year",Calendar.getInstance().get(Calendar.YEAR));
+        }
+        else
+        {
+            day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            month = Calendar.getInstance().get(Calendar.MONTH);
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
 
         setSales(day,month,year);
     }
@@ -180,4 +191,18 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
     {
         return n<10 ? "0"+n : n.toString();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
