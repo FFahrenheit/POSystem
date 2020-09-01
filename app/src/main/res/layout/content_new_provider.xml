@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Agregar nuevo proveedor"
+                android:textAlignment="center"
+                android:textSize="20dp"></TextView>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/newProviderName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre del proveedor"
+                android:textAlignment="center">
+            </android.support.design.widget.TextInputEditText>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/newProviderNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefono de contacto"
+                android:inputType="number"
+                android:textAlignment="center">
+            </android.support.design.widget.TextInputEditText>
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

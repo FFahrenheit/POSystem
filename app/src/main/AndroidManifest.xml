@@ -11,10 +11,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".NewProvider"
+            android:label="Nuevo proveedor"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ManageProvider"
+            android:label="Gestionar proveedores"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MonthlyReport"
             android:label="Reportes por mes"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DailyReport"
             android:label="Reportes diarios"

@@ -138,30 +138,32 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent;
                 switch (item.getItemId())
                 {
+                    case R.id.nav_provider_manage:
+                        intent = new Intent(MainActivity.this, ManageProvider.class);
+                        break;
                     case R.id.nav_reports_month:
                         intent = new Intent(MainActivity.this, MonthlyReport.class);
-                        startActivity(intent);
                         break;
                     case R.id.nav_reports_daily:
                         intent = new Intent(MainActivity.this, DailyReport.class);
-                        startActivity(intent);
                         break;
                     case R.id.nav_addP:
                         intent = new Intent(MainActivity.this, NewProduct.class);
                         intent.putExtra("edit",false);
-                        startActivity(intent);
                         break;
                     case R.id.nav_editP:
                         intent = new Intent(MainActivity.this,EditProduct.class);
-                        startActivity(intent);
                         break;
                     case R.id.nav_inventory:
                         intent = new Intent(MainActivity.this,AddInventory.class);
-                        startActivity(intent);
+                        break;
                     default:
                         Snackbar.make(productList, "Aun no implementado", Snackbar.LENGTH_LONG)
                                 .show();
+                        return true;
                 }
+                startActivity(intent);
+
                 int size = navigationView.getMenu().size();
                 for (int i = 0; i < size; i++) {
                     navigationView.getMenu().getItem(i).setChecked(false);
@@ -247,7 +249,6 @@ public class MainActivity extends AppCompatActivity{
                     RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
 
                     queue.add(request);
-
                 }
             }
 

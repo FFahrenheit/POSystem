@@ -26,6 +26,8 @@
     <string name="title_activity_pay_account">PayAccount</string>
     <string name="title_activity_daily_report">DailyReport</string>
     <string name="title_activity_monthly_report">MonthlyReport</string>
+    <string name="title_activity_manage_provider">ManageProvider</string>
+    <string name="title_activity_new_provider">NewProvider</string>
     <string-array name="esp">
         <item>Pieza(s)</item>
         <item>Granel</item>
