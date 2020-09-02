@@ -21,7 +21,9 @@ public class Provision
 
     public Double getUtility()
     {
-        return (productPrice/price - 1)*100;
+        Double util =  (productPrice/price - 1)*100;
+        String formatter = util.toString().substring(0,util.toString().indexOf(".")+3);
+        return Double.parseDouble(formatter);
     }
 
     public String getProductCode() {

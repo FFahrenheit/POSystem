@@ -1,5 +1,8 @@
 package com.dev.posystem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ProductItem
 {
     private String codeBar;
@@ -8,6 +11,16 @@ public class ProductItem
     private Double price;
     private String esp;
 
+    public boolean isAlreadyProvider() {
+        return alreadyProvider;
+    }
+
+    public void setAlreadyProvider(boolean alreadyProvider) {
+        this.alreadyProvider = alreadyProvider;
+    }
+
+    private boolean alreadyProvider;
+
     public ProductItem()
     {
         codeBar = "0";
@@ -15,6 +28,16 @@ public class ProductItem
         stock = 0.0;
         price = 0.0;
         esp = "granel/pieza";
+        alreadyProvider = false;
+    }
+
+    public ProductItem(JSONObject object, boolean _p) throws JSONException {
+        codeBar = object.getString("codigo");
+        name = object.getString("descripcion");
+        stock = object.getDouble("stock");
+        price = object.getDouble("precio");
+        esp = object.getString("especificacion");
+        alreadyProvider = (object.getInt("bool") == 0) ? false : true;
     }
 
     public String getGET()

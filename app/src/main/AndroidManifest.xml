@@ -12,7 +12,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".NewProvision"
-            android:label="@string/title_activity_new_provision"
+            android:label="Administrar provisiones"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ManageProvisions"

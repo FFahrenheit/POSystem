@@ -82,7 +82,10 @@ public class ManageProvisions extends AppCompatActivity
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                util.snack("Proximamente...");
+                Intent intent = new Intent(ManageProvisions.this, NewProvision.class);
+                intent.putExtra("pk",providerKey);
+                intent.putExtra("name",providerName);
+                startActivity(intent);
             }
         });
 

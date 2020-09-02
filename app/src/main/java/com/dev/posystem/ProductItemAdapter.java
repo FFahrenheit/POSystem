@@ -14,6 +14,15 @@ public class ProductItemAdapter extends BaseAdapter
     public ArrayList<ProductItem> products;
     public Context context;
 
+    public ProductItemAdapter(Context applicationContext, ArrayList<ProductItem> products) {
+        this.products = products;
+        this.context = applicationContext;
+    }
+
+    public ProductItemAdapter() {
+
+    }
+
     @Override
     public int getCount() {
         return products.size();
