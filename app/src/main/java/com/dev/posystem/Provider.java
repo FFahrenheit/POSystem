@@ -14,7 +14,7 @@ public class Provider
     {
         this.name = object.getString("nombre");
         this.number = object.getString("contacto");
-        this.products = 0; //No hay support
+        this.products = object.getInt("total"); //No hay support
         this.pk = object.getInt("clave");
     }
 

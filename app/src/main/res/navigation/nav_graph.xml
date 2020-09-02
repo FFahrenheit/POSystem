@@ -205,4 +205,44 @@
             android:id="@+id/action_Second10Fragment_to_First10Fragment"
             app:destination="@id/First10Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First11Fragment"
+        android:name="com.dev.posystem.First11Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first11">
+
+        <action
+            android:id="@+id/action_First11Fragment_to_Second11Fragment"
+            app:destination="@id/Second11Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second11Fragment"
+        android:name="com.dev.posystem.Second11Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second11">
+
+        <action
+            android:id="@+id/action_Second11Fragment_to_First11Fragment"
+            app:destination="@id/First11Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/First12Fragment"
+        android:name="com.dev.posystem.First12Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first12">
+
+        <action
+            android:id="@+id/action_First12Fragment_to_Second12Fragment"
+            app:destination="@id/Second12Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second12Fragment"
+        android:name="com.dev.posystem.Second12Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second12">
+
+        <action
+            android:id="@+id/action_Second12Fragment_to_First12Fragment"
+            app:destination="@id/First12Fragment" />
+    </fragment>
 </navigation>

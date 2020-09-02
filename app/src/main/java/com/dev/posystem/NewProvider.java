@@ -1,5 +1,6 @@
 package com.dev.posystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,6 +28,9 @@ public class NewProvider extends AppCompatActivity {
     private TextInputEditText vName;
     private TextInputEditText vNumber;
     private Utilities util;
+    private boolean isEdit;
+    private Integer pk;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,6 +45,21 @@ public class NewProvider extends AppCompatActivity {
         vName = findViewById(R.id.newProviderName);
         vNumber = findViewById(R.id.newProviderNumber);
         util = new Utilities(getApplicationContext(),saveButton);
+        title = findViewById(R.id.newProviderAlert);
+
+
+        Intent intent = getIntent();
+
+        isEdit = intent.getBooleanExtra("edit",false);
+
+        if(isEdit)
+        {
+            setTitle("Editar proveedor");
+            this.pk = intent.getIntExtra("pk",0);
+            vName.setText(intent.getStringExtra("name"));
+            vNumber.setText(intent.getStringExtra("number"));
+            title.setText("Editar a "+intent.getStringExtra("name"));
+        }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +77,17 @@ public class NewProvider extends AppCompatActivity {
                     return;
                 }
 
-                String url = util.getServer() + "newProvider.php?name="+name+"&number="+number;
+                String url;
+
+                if(isEdit)
+                {
+                    url = util.getServer() + "editProvider.php?name="+name+"&number="+number+"&pk="+pk;
+                }
+                else
+                {
+                    url = util.getServer() + "newProvider.php?name="+name+"&number="+number;
+                }
+
 
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.GET,
@@ -71,8 +101,22 @@ public class NewProvider extends AppCompatActivity {
                                     util.simpleStatusAlert(status);
                                     if(status==200)
                                     {
-                                        vName.setText("");
-                                        vNumber.setText("");
+                                        if(isEdit)
+                                        {
+                                            title.setText("Editar a "+vName.getText().toString());
+                                            Snackbar.make(returnButton,"Producto editado",Snackbar.LENGTH_INDEFINITE)
+                                                    .setAction("Salir", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            finish();
+                                                        }
+                                                    });
+                                        }
+                                        else
+                                        {
+                                            vName.setText("");
+                                            vNumber.setText("");
+                                        }
                                     }
                                 } catch (JSONException e) {
                                     util.snack("Error, no se pudo completar la operacion");
