@@ -11,9 +11,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".AddVisit"
+            android:label="@string/title_activity_add_visit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".NewVisit"
+            android:label="@string/title_activity_new_visit"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".NewProvision"
             android:label="Administrar provisiones"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ManageProvisions"
             android:label="@string/title_activity_manage_provisions"

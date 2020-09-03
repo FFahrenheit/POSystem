@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccione un proveedor"
+            android:textAlignment="center"
+            android:textSize="20dp">
+        </TextView>
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del proveedor"
+            android:maxLines="1"
+            android:textSize="18dp"
+            android:id="@+id/newVisitSearch"
+            android:inputType="text"
+            android:textAlignment="center">
+        </android.support.design.widget.TextInputEditText>
+        <ListView
+            android:id="@+id/newVisitList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="100dp"
+            android:id="@+id/newVisitEmpty"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:text="No se encontraron proveedores"></TextView>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.constraint.ConstraintLayout>

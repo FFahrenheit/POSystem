@@ -30,6 +30,8 @@
     <string name="title_activity_new_provider">NewProvider</string>
     <string name="title_activity_manage_provisions">ManageProvisions</string>
     <string name="title_activity_new_provision">NewProvision</string>
+    <string name="title_activity_new_visit">NewVisit</string>
+    <string name="title_activity_add_visit">AddVisit</string>
     <string-array name="esp">
         <item>Pieza(s)</item>
         <item>Granel</item>

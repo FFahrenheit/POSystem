@@ -138,6 +138,9 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent;
                 switch (item.getItemId())
                 {
+                    case R.id.nav_provider_add:
+                        intent = new Intent(MainActivity.this, NewVisit.class);
+                        break;
                     case R.id.nav_provider_manage:
                         intent = new Intent(MainActivity.this, ManageProvider.class);
                         break;
