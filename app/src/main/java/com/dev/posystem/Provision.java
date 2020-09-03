@@ -22,7 +22,7 @@ public class Provision
     public Double getUtility()
     {
         Double util =  (productPrice/price - 1)*100;
-        String formatter = util.toString().substring(0,util.toString().indexOf(".")+3);
+        String formatter = (util.toString()+"0").substring(0,util.toString().indexOf(".")+3);
         return Double.parseDouble(formatter);
     }
 
