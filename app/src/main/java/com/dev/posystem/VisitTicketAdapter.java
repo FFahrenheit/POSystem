@@ -14,6 +14,12 @@ public class VisitTicketAdapter extends BaseAdapter
     public ArrayList<VisitTicket> items;
     public Context context;
 
+    public VisitTicketAdapter(Context applicationContext, ArrayList<VisitTicket> i)
+    {
+        context = applicationContext;
+        items = i;
+    }
+
     public Double getTotal()
     {
         Double total = 0.0;

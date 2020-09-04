@@ -16,11 +16,11 @@ public class VisitTicket
 
     public VisitTicket(JSONObject object) throws JSONException
     {
-        id = object.getInt("pk");
+        id = object.getInt("clave");
         productName = object.getString("name");
-        productCode = object.getString("code");
-        price = object.getDouble("price");
-        qty = object.getDouble("qty");
+        productCode = object.getString("producto");
+        price = object.getDouble("precio");
+        qty = object.getDouble("cantidad");
         total = object.getDouble("total");
     }
 

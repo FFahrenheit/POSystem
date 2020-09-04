@@ -47,6 +47,8 @@ public class AddVisit extends AppCompatActivity
     private ProvisionAdapter adapter;
     private Utilities util;
     private Integer visitID;
+    private ArrayList<VisitTicket> items;
+    private VisitTicketAdapter iAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +72,141 @@ public class AddVisit extends AppCompatActivity
 
         provisions = new ArrayList<>();
         adapter = new ProvisionAdapter(getApplicationContext(),provisions);
+        items = new ArrayList<>();
+        iAdapter = new VisitTicketAdapter(getApplicationContext(),items);
 
         searchList.setAdapter(adapter);
         searchList.setEmptyView(emptySearch);
+
         productList.setEmptyView(emptyProduct);
+        productList.setAdapter(iAdapter);
+
+        productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int itemPosition, long l) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddVisit.this);
+
+                final EditText edittext = new EditText(AddVisit.this);
+
+                edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
+                        InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                        InputType.TYPE_NUMBER_FLAG_SIGNED);
+
+                alert.setMessage("Editar cantidad");
+                alert.setTitle("Editar cantidad de "+items.get(itemPosition).getProductName());
+
+                alert.setView(edittext);
+
+                alert.setNegativeButton("Eliminar provision", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        AlertDialog.Builder confirm = new AlertDialog.Builder(AddVisit.this);
+                        confirm.setTitle("Eliminar "+items.get(itemPosition).getProductName());
+                        confirm.setMessage("¿Desea eliminar este producto de su visita?");
+
+                        confirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                util.snack("Operacion cancelada");
+                            }
+                        });
+
+                        confirm.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String url = util.getServer() + "deleteVisitItem.php?id="+items.get(itemPosition).getId();
+                                final JsonObjectRequest request = new JsonObjectRequest(
+                                        Request.Method.GET,
+                                        url,
+                                        null,
+                                        new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                try {
+                                                    int status = response.getInt("status");
+                                                    util.simpleStatusAlert(status);
+                                                    if(status==200)
+                                                    {
+                                                        updateVisit();
+                                                    }
+                                                } catch (JSONException e) {
+                                                    util.snack("Error: "+e.getMessage());
+                                                }
+
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                util.snack("Fallo: "+error.getMessage());
+                                            }
+                                        }
+                                );
+                                Volley.newRequestQueue(getApplicationContext()).add(request);
+                            }
+                        });
+
+                        confirm.create().show();
+                    }
+                });
+
+                alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        util.snack("Operacion cancelada");
+                    }
+                });
+
+                alert.setPositiveButton("Modificar cantidad", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String qty = edittext.getText().toString();
+                        if(qty.contains("-") || !util.isCode(qty))
+                        {
+                            util.snack("Ingrese una cantidad valida");
+                            return;
+                        }
+                        String url = util.getServer() + "editVisitItem.php?qty="+qty+"&key="+items.get(itemPosition).getId();
+
+                        final Request request = new JsonObjectRequest(
+                                Request.Method.GET,
+                                url,
+                                null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            int status = response.getInt("status");
+                                            util.simpleStatusAlert(status);
+                                            if(status==200)
+                                            {
+                                                updateVisit();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        util.snack("Fallo: "+error.getMessage());
+                                    }
+                                }
+                        );
+                        Volley.newRequestQueue(getApplicationContext()).add(request);
+                    }
+                });
+
+                alert.create().show();
+            }
+        });
+
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int itemPosition, long l){
-                AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+            public void onItemClick(AdapterView<?> adapterView, View view, final int itemPosition, long l)
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddVisit.this);
 
                 final EditText edittext = new EditText(AddVisit.this);
 
@@ -107,8 +236,8 @@ public class AddVisit extends AppCompatActivity
                                     util.snack("Ingrese una cantidad valida");
                                     return;
                                 }
-                                String url = util.getServer() + "addProductVisit.php?item="+provisions.get(i).getProductCode()
-                                        +"&qty="+qty+"&price="+provisions.get(i).getPrice();
+                                String url = util.getServer() + "addProductVisit.php?item="+provisions.get(itemPosition).getProductCode()
+                                        +"&qty="+qty+"&price="+provisions.get(itemPosition).getPrice()+"&visit="+visitID;
                                 JsonObjectRequest request = new JsonObjectRequest(
                                         Request.Method.GET,
                                         url,
@@ -166,7 +295,7 @@ public class AddVisit extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddVisit.this);
 
                 alert.setTitle("Cancelar visita");
                 alert.setMessage("¿Seguro que desea cancelar la visita? Si desea reanudar después solo presiona la flecha de regreso");
@@ -219,9 +348,10 @@ public class AddVisit extends AppCompatActivity
         });
 
         getProvisions("",false);
+        updateVisit();
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -232,6 +362,12 @@ public class AddVisit extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(AddVisit.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void getProvisions(String query,boolean isCode)
@@ -294,6 +430,51 @@ public class AddVisit extends AppCompatActivity
 
     private void updateVisit()
     {
+        String url = util.getServer() + "getVisit.php?key="+visitID;
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response)
+                    {
+                        items.clear();
+                        for(int i=0; i<response.length();i++)
+                        {
+                            try {
+                                VisitTicket item = new VisitTicket(response.getJSONObject(i));
+                                items.add(item);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        iAdapter.notifyDataSetChanged();
+                        status.setText("$"+iAdapter.getTotal());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Snackbar.make(emptyProduct,"No se pudieron cargar los datos: "+error.getMessage(),Snackbar.LENGTH_INDEFINITE)
+                                .setAction("Reintentar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        updateVisit();
+                                    }
+                                }).show();
+                    }
+                }
+        );
+
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(request);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateVisit();
 
     }
 }
