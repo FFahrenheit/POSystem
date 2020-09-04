@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:orientation="horizontal">
+        <TextView
+            android:textSize="14dp"
+            android:id="@+id/visitTicketQty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".13"
+            android:textAlignment="center">
+        </TextView>
+        <TextView
+            android:textSize="14dp"
+            android:id="@+id/visitTicketProduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".61"
+            android:textAlignment="center">
+        </TextView>
+        <TextView
+            android:textSize="14dp"
+            android:id="@+id/visitTicketPriceUnit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".13"
+            android:textAlignment="center">
+        </TextView>
+        <TextView
+            android:textSize="14dp"
+            android:id="@+id/visitTicketPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".13"
+            android:textAlignment="center">
+        </TextView>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
