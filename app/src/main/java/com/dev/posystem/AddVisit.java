@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -49,6 +48,7 @@ public class AddVisit extends AppCompatActivity
     private Integer visitID;
     private ArrayList<VisitTicket> items;
     private VisitTicketAdapter iAdapter;
+    private FloatingActionButton pay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,25 @@ public class AddVisit extends AppCompatActivity
         emptySearch = findViewById(R.id.addVisitSearchEmpty);
         emptyProduct = findViewById(R.id.addVisitProductEmpty);
         util = new Utilities(getApplicationContext(),emptyProduct);
+        pay = findViewById(R.id.addVisitFinish);
+
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(items.size()<0)
+                {
+                    util.snack("Agregue productos a la visita para poder pagar");
+                }
+                else
+                {
+                    Intent intent = new Intent(AddVisit.this, PayVisit.class);
+                    intent.putExtra("key",visitID);
+                    intent.putExtra("name",providerName);
+                    intent.putExtra("paid",false);
+                    startActivity(intent);
+                }
+            }
+        });
 
         provisions = new ArrayList<>();
         adapter = new ProvisionAdapter(getApplicationContext(),provisions);

@@ -285,4 +285,24 @@
             android:id="@+id/action_Second14Fragment_to_First14Fragment"
             app:destination="@id/First14Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First15Fragment"
+        android:name="com.dev.posystem.First15Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first15">
+
+        <action
+            android:id="@+id/action_First15Fragment_to_Second15Fragment"
+            app:destination="@id/Second15Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second15Fragment"
+        android:name="com.dev.posystem.Second15Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second15">
+
+        <action
+            android:id="@+id/action_Second15Fragment_to_First15Fragment"
+            app:destination="@id/First15Fragment" />
+    </fragment>
 </navigation>

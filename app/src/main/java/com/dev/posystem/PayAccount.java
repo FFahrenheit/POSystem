@@ -43,7 +43,6 @@ public class PayAccount extends AppCompatActivity
     private TicketAdapter adapter;
     private ListView ticketList;
     private Utilities util;
-
     private boolean paid = false;
     private Sale paidSale = null;
 
