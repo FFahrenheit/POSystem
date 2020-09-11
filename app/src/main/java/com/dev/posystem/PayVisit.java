@@ -55,7 +55,8 @@ public class PayVisit extends AppCompatActivity
     private Utilities util;
     private Double totalMoney;
     private Double subtotalMoney;
-    public boolean payable;
+    private boolean payable;
+    private boolean wasPaid;
 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
@@ -70,6 +71,7 @@ public class PayVisit extends AppCompatActivity
 
         Intent intent = getIntent();
         isPaid = intent.getBooleanExtra("paid",false);
+        wasPaid = isPaid;
         visitID = intent.getIntExtra("key",0);
         providerName = intent.getStringExtra("name");
         hasIva = false;
@@ -97,8 +99,8 @@ public class PayVisit extends AppCompatActivity
 
         if(isPaid)
         {
+            getInfo();
             disableFunctions();
-            //TODO: Get data from database
         }
 
         paid.addTextChangedListener(new TextWatcher() {
@@ -230,11 +232,55 @@ public class PayVisit extends AppCompatActivity
         switch (item.getItemId())
         {
             case android.R.id.home:
-                finish();
+                if(isPaid && !wasPaid)
+                {
+                    Intent intent = new Intent(PayVisit.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    finish();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void getInfo()
+    {
+        String url = util.getServer() + "getVisitInfo.php?key="+visitID;
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        change.setText("PAGADO");
+                        try {
+                            subtotalMoney = response.getDouble("subtotal");
+                            totalMoney = response.getDouble("total");
+                            total.setText("Total: $"+df2.format(totalMoney));
+                            subtotal.setText("Subtotal: $"+df2.format(subtotalMoney));
+                            findViewById(R.id.payVisitIVA).setActivated(response.getInt("iva") != 0);
+                            findViewById(R.id.payVisitIEPS).setActivated(response.getInt("ieps")!=0);
+                            taxPercentage.setText(((Integer)response.getInt(("ieps"))).toString());
+                        } catch (JSONException e) {
+                            util.snack("No se pudo recibir la informacion: "+e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        util.snack("No se pudo cargar la informacion de la visita");
+                    }
+                }
+        );
+
+        RequestQueue queue = Volley.newRequestQueue(PayVisit.this);
+        queue.add(request);
     }
 
     private void updateVisit()

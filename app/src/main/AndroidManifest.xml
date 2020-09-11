@@ -11,9 +11,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".DayVisit"
+            android:label="@string/title_activity_day_visit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".PayVisit"
             android:label="@string/title_activity_pay_visit"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddVisit"
             android:label="@string/title_activity_add_visit"

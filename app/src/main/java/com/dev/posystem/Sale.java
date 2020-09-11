@@ -12,7 +12,7 @@ public class Sale
     private String cashier;
     private Integer productCount;
     public String json="";
-
+    
     public Sale(JSONObject sale) throws JSONException {
         productCount = sale.getInt("products");
         total = sale.getDouble("total");

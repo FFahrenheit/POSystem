@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -30,44 +29,40 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class DailyReport extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener
-{
+public class DayVisit extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private Button button;
     private TextView date;
-    private ListView salesList;
+    private ListView visitList;
     private TextView empty;
     private TextView total;
     private Utilities util;
     private String server;
-    private ArrayList<Sale> sales;
-    private SaleAdapter adapter;
+    private ArrayList<VisitDayReport> visits;
+    private VisitDayReportAdapter adapter;
     private Integer day,month,year;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_report);
+        setContentView(R.layout.activity_day_visit);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        button = findViewById(R.id.dailyReportButton);
-        date = findViewById(R.id.dailyReportDate);
-        salesList = findViewById(R.id.dailyReportList);
-        empty = findViewById(R.id.dailyReportEmpty);
-        total = findViewById(R.id.dailyReportTotal);
+        button = findViewById(R.id.dayVisitSelectDate);
+        date = findViewById(R.id.dayVisitDate);
+        visitList = findViewById(R.id.dayVisitList);
+        empty = findViewById(R.id.dayVisitEmpty);
+        total = findViewById(R.id.dayVisitTotal);
 
         util = new Utilities(getApplicationContext(),empty);
-        salesList.setEmptyView(empty);
+        visitList.setEmptyView(empty);
         server = util.getServer();
 
-        sales = new ArrayList<>();
-        adapter = new SaleAdapter();
-        adapter.context = getApplicationContext();
-        adapter.sales = sales;
+        visits = new ArrayList<>();
+        adapter = new VisitDayReportAdapter(getApplicationContext(),visits);
 
-        salesList.setAdapter(adapter);
+        visitList.setAdapter(adapter);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,18 +71,10 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
             }
         });
 
-        FloatingActionButton fab = findViewById(R.id.dailyReportReturn);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         Intent rx = getIntent();
         if(rx.getBooleanExtra("set",false))
         {
-            day = rx.getIntExtra("day",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            day = rx.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             month = rx.getIntExtra("month",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             year = rx.getIntExtra("year",Calendar.getInstance().get(Calendar.YEAR));
         }
@@ -99,6 +86,14 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
         }
 
         setSales(day,month,year);
+
+        FloatingActionButton goBack = findViewById(R.id.dayVisitGoBack);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void showDatePickerDialog()
@@ -123,12 +118,12 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
 
     private void setSales(Integer day, Integer month, Integer year)
     {
-        sales.clear();
+        visits.clear();
         String dateS = getFormatted(day)+"/"+getFormatted(month+1)+"/"+year;
         String dateQ = year+"-"+(month+1)+"-"+day;
         date.setText(dateS);
 
-        String url = server + "getDaySales.php?date="+dateQ;
+        String url = server + "getDayVisits.php?date="+dateQ;
 
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
@@ -139,12 +134,12 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
                     public void onResponse(JSONArray response) {
                         try
                         {
-                            sales.clear();
+                            visits.clear();
                             for(int i=0; i<response.length();i++)
                             {
                                 JSONObject sale = response.getJSONObject(i);
-                                Sale saleC = new Sale(sale);
-                                sales.add(saleC);
+                                VisitDayReport saleC = new VisitDayReport(sale);
+                                visits.add(saleC);
                             }
                             total.setText("$"+adapter.getTotal());
                             if(adapter.getTotal()>0)
@@ -166,22 +161,23 @@ public class DailyReport extends AppCompatActivity implements  DatePickerDialog.
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        util.snack("No se pudieron cargar las ventas");
+                        util.snack("No se pudieron cargar las visitas");
                     }
                 }
         );
-        RequestQueue queue = Volley.newRequestQueue(DailyReport.this);
+        RequestQueue queue = Volley.newRequestQueue(DayVisit.this);
         queue.add(request);
 
         adapter.notifyDataSetChanged();
 
-        salesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        visitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> listView, View itemView, final int itemPosition, long itemId)
             {
-                Intent intent = new Intent(DailyReport.this, PayAccount.class);
+                Intent intent = new Intent(DayVisit.this, PayVisit.class);
                 intent.putExtra("paid",true);
-                intent.putExtra("sale",sales.get(itemPosition).json);
+                intent.putExtra("key",visits.get(itemPosition).getPk());
+                intent.putExtra("name", visits.get(itemPosition).getProvider());
                 startActivity(intent);
             }
         });

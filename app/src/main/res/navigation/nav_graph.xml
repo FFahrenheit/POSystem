@@ -305,4 +305,24 @@
             android:id="@+id/action_Second15Fragment_to_First15Fragment"
             app:destination="@id/First15Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First16Fragment"
+        android:name="com.dev.posystem.First16Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first16">
+
+        <action
+            android:id="@+id/action_First16Fragment_to_Second16Fragment"
+            app:destination="@id/Second16Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second16Fragment"
+        android:name="com.dev.posystem.Second16Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second16">
+
+        <action
+            android:id="@+id/action_Second16Fragment_to_First16Fragment"
+            app:destination="@id/First16Fragment" />
+    </fragment>
 </navigation>

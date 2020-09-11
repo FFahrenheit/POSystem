@@ -9,7 +9,8 @@ public class DailySale
     private Integer saleCount;
     private Double total;
 
-    public DailySale(JSONObject object) throws JSONException {
+    public DailySale(JSONObject object) throws JSONException
+    {
         this.day = object.getString("fecha");
         this.saleCount = object.getInt("count");
         this.total = object.getDouble("total");
