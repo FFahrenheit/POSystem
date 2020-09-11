@@ -345,4 +345,24 @@
             android:id="@+id/action_Second17Fragment_to_First17Fragment"
             app:destination="@id/First17Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First18Fragment"
+        android:name="com.dev.posystem.First18Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first18">
+
+        <action
+            android:id="@+id/action_First18Fragment_to_Second18Fragment"
+            app:destination="@id/Second18Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second18Fragment"
+        android:name="com.dev.posystem.Second18Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second18">
+
+        <action
+            android:id="@+id/action_Second18Fragment_to_First18Fragment"
+            app:destination="@id/First18Fragment" />
+    </fragment>
 </navigation>

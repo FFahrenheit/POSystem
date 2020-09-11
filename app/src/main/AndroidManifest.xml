@@ -11,11 +11,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".DailyUtilities"
+            android:label="@string/title_activity_daily_utilities"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".MonthlyVisits"
             android:label="@string/title_activity_monthly_visits"
-            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DayVisit"
             android:label="@string/title_activity_day_visit"

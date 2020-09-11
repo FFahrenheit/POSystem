@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,12 @@ public class Utilities
 {
     private Context context;
     private View someView;
+    private static DecimalFormat df2 = new DecimalFormat("#.##");
+
+    public String df2(Object object)
+    {
+        return df2.format(object);
+    }
 
     Utilities(Context ctx, View view)
     {
