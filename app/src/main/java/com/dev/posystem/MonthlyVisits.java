@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MonthlyReport extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class MonthlyVisits extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private Button button;
     private Utilities util;
     private DatePickerDialog datePicker;
@@ -39,41 +40,39 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
     private TextView date;
     private TextView empty;
     private TextView totalSold;
-    private ListView salesList;
-    private ArrayList<DailySale> sales;
-    private DailySaleAdapter adapter;
+    private ListView visitList;
+    private ArrayList<DailyVisit> visits;
+    private DailyVisitAdapter adapter;
     private String server;
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monthly_report);
+        setContentView(R.layout.activity_monthly_visits);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Visitas del mes");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        button = findViewById(R.id.monthlyReportButton);
+        button = findViewById(R.id.monthlyVisitsButton);
         util = new Utilities(getApplicationContext(),button);
         datePicker = createDialogWithoutDateField();
-        date = findViewById(R.id.monthlyReportDate);
-        salesList = findViewById(R.id.monthlyReportList);
-        sales = new ArrayList<>();
-        adapter = new DailySaleAdapter(getApplicationContext(),sales);
-        salesList.setAdapter(adapter);
-        empty = findViewById(R.id.monthlyReportEmpty);
-        salesList.setEmptyView(empty);
+        date = findViewById(R.id.monthlyVisitsDate);
+        visitList = findViewById(R.id.monthlyVisitsList);
+        visits = new ArrayList<>();
+        adapter = new DailyVisitAdapter(getApplicationContext(),visits);
+        visitList.setAdapter(adapter);
+        empty = findViewById(R.id.monthlyVisitsEmpty);
+        visitList.setEmptyView(empty);
         server = util.getServer();
-        totalSold = findViewById(R.id.monthlyReportTotal);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        totalSold = findViewById(R.id.monthlyVisitsTotal);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //datePicker.show();   Alernativa 1
-                // /*
                 MonthYearPickerDialog pd = new MonthYearPickerDialog();
-                //pd.setDates(month,year);
                 pd.setListener(new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -83,25 +82,16 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
                     }
                 });
                 pd.show(getSupportFragmentManager(), "MonthYearPickerDialog");
-                // */ Alternativa 2
             }
         });
 
 
-        FloatingActionButton fab = findViewById(R.id.dailySaleReturn);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        salesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        visitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MonthlyReport.this, DailyReport.class);
+                Intent intent = new Intent(MonthlyVisits.this, DayVisit.class);
                 intent.putExtra("set",true);
-                String date[] = sales.get(i).getDayParts();
+                String date[] = visits.get(i).getDayParts();
                 intent.putExtra("year",Integer.parseInt(date[0]));
                 intent.putExtra("month",Integer.parseInt(date[1])-1);
                 intent.putExtra("day",Integer.parseInt(date[2]));
@@ -110,6 +100,14 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
         });
 
         setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
+
+        FloatingActionButton goBack = findViewById(R.id.dailyVisitReturn);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private DatePickerDialog createDialogWithoutDateField()
@@ -154,7 +152,7 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
     private void setSales(Integer m, Integer y)
     {
         date.setText(getMonthForInt(m)+" "+y);
-        String url = server + "getMonthlySales.php?year="+y+"&month="+(m+1);
+        String url = server + "getMonthlyVisits.php?year="+y+"&month="+(m+1);
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -163,31 +161,24 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
                     @Override
                     public void onResponse(JSONArray response) {
                         Double total = 0.0;
-                        sales.clear();
+                        visits.clear();
                         for(int i=0; i<response.length();i++)
                         {
                             try
                             {
                                 JSONObject sale = response.getJSONObject(i);
-                                DailySale saleC = new DailySale(sale);
+                                DailyVisit saleC = new DailyVisit(sale);
                                 total += saleC.getTotal();
-                                sales.add(saleC);
+                                visits.add(saleC);
                             } catch (JSONException e)
                             {
                                 util.snack("Error al recibir la informacion");
                                 e.printStackTrace();
                             }
                         }
+
                         totalSold.setText("$"+df2.format(total));
 
-                        if(total>0)
-                        {
-                            totalSold.setTextColor(Color.GREEN);
-                        }
-                        else
-                        {
-                            totalSold.setTextColor(Color.RED);
-                        }
                         adapter.notifyDataSetChanged();
 
                     }

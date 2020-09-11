@@ -48,6 +48,7 @@ public class DayVisit extends AppCompatActivity implements DatePickerDialog.OnDa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Visitas de proveedores del dia");
 
         button = findViewById(R.id.dayVisitSelectDate);
         date = findViewById(R.id.dayVisitDate);

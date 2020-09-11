@@ -138,6 +138,9 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent;
                 switch (item.getItemId())
                 {
+                    case R.id.nav_buys_month:
+                        intent = new Intent(MainActivity.this, MonthlyVisits.class);
+                        break;
                     case R.id.nav_buys_daily:
                         intent = new Intent(MainActivity.this, DayVisit.class);
                         break;

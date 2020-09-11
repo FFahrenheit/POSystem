@@ -325,4 +325,24 @@
             android:id="@+id/action_Second16Fragment_to_First16Fragment"
             app:destination="@id/First16Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First17Fragment"
+        android:name="com.dev.posystem.First17Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first17">
+
+        <action
+            android:id="@+id/action_First17Fragment_to_Second17Fragment"
+            app:destination="@id/Second17Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second17Fragment"
+        android:name="com.dev.posystem.Second17Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second17">
+
+        <action
+            android:id="@+id/action_Second17Fragment_to_First17Fragment"
+            app:destination="@id/First17Fragment" />
+    </fragment>
 </navigation>
