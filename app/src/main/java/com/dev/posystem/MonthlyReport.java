@@ -109,7 +109,15 @@ public class MonthlyReport extends AppCompatActivity implements DatePickerDialog
             }
         });
 
-        setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("set",false))
+        {
+            setSales(intent.getIntExtra("month",8),intent.getIntExtra("year",2020));
+        }
+        else
+        {
+            setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
+        }
     }
 
     private DatePickerDialog createDialogWithoutDateField()

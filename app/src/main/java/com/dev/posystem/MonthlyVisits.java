@@ -85,7 +85,6 @@ public class MonthlyVisits extends AppCompatActivity implements DatePickerDialog
             }
         });
 
-
         visitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -99,7 +98,15 @@ public class MonthlyVisits extends AppCompatActivity implements DatePickerDialog
             }
         });
 
-        setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("set",false))
+        {
+            setSales(intent.getIntExtra("month",8),intent.getIntExtra("year",2020));
+        }
+        else
+        {
+            setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
+        }
 
         FloatingActionButton goBack = findViewById(R.id.dailyVisitReturn);
         goBack.setOnClickListener(new View.OnClickListener() {

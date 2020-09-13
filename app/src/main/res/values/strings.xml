@@ -36,6 +36,7 @@
     <string name="title_activity_day_visit">DayVisit</string>
     <string name="title_activity_monthly_visits">MonthlyVisits</string>
     <string name="title_activity_daily_utilities">DailyUtilities</string>
+    <string name="title_activity_monthly_utilities">MonthlyUtilities</string>
     <string-array name="esp">
         <item>Pieza(s)</item>
         <item>Granel</item>

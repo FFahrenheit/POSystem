@@ -11,9 +11,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MonthlyUtilities"
+            android:label="@string/title_activity_monthly_utilities"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".DailyUtilities"
             android:label="@string/title_activity_daily_utilities"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MonthlyVisits"
             android:label="@string/title_activity_monthly_visits"

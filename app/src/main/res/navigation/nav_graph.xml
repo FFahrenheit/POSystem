@@ -365,4 +365,24 @@
             android:id="@+id/action_Second18Fragment_to_First18Fragment"
             app:destination="@id/First18Fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/First19Fragment"
+        android:name="com.dev.posystem.First19Fragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first19">
+
+        <action
+            android:id="@+id/action_First19Fragment_to_Second19Fragment"
+            app:destination="@id/Second19Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Second19Fragment"
+        android:name="com.dev.posystem.Second19Fragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second19">
+
+        <action
+            android:id="@+id/action_Second19Fragment_to_First19Fragment"
+            app:destination="@id/First19Fragment" />
+    </fragment>
 </navigation>

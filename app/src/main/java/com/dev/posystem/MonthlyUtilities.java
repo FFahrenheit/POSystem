@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,58 +20,59 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Locale;
 
-public class DailyUtilities extends AppCompatActivity implements DatePickerDialog.OnDateSetListener
+public class MonthlyUtilities extends AppCompatActivity implements DatePickerDialog.OnDateSetListener
 {
-    private Button selectDate;
+    private FloatingActionButton goBack;
+    private Utilities util;
+    private Button setDate;
+    private Integer month, year;
+    private DatePickerDialog datePicker;
+    private TextView date;
+    private String server;
     private Button seeSales;
     private Button seeVisits;
-    private TextView showDate;
     private TextView totalSold;
     private TextView totalPaid;
     private TextView totalEarn;
     private TextView utilityPercentage;
-    private FloatingActionButton goBack;
-    private Utilities util;
-    private String server;
-    private Integer day, month, year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_utilities);
+        setContentView(R.layout.activity_monthly_utilities);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Utilidades por dia");
+        setTitle("Ganancias por mes");
 
-        selectDate = findViewById(R.id.dailyUtilitiesButton);
-        seeSales = findViewById(R.id.dailyUtilitiesSoldButton);
-        seeVisits = findViewById(R.id.dailyUtilitiesPaidButton);
-        showDate = findViewById(R.id.dailyUtilitiesDate);
-        totalSold = findViewById(R.id.dailyUtilitiesSold);
-        totalPaid = findViewById(R.id.dailyUtilitiesPaid);
-        totalEarn = findViewById(R.id.dailyUtilitiesTotal);
-        utilityPercentage = findViewById(R.id.dailyUtilitiesPercentage);
-        goBack = findViewById(R.id.dailyUtilitiesGoBack);
-        util = new Utilities(getApplicationContext(),selectDate);
+        goBack = findViewById(R.id.monthlyUtilitiesGoBack);
+        util = new Utilities(getApplicationContext(),goBack);
         server = util.getServer();
-
-        totalSold.setTextColor(Color.GREEN);
-        totalPaid.setTextColor(Color.RED);
+        setDate = findViewById(R.id.monthlyUtilitiesSelectDateButton);
+        datePicker = createDialogWithoutDateField();
+        date = findViewById(R.id.monthlyUtilitiesDate);
+        seeSales = findViewById(R.id.monthlyUtilitiesSoldButton);
+        seeVisits = findViewById(R.id.monthlyUtilitiesPaidButton);
+        totalSold = findViewById(R.id.monthlyUtilitiesSold);
+        totalPaid = findViewById(R.id.monthlyUtilitiesPaid);
+        totalEarn = findViewById(R.id.monthlyUtilitiesTotal);
+        utilityPercentage = findViewById(R.id.monthlyUtilitiesPercentage);
 
         seeSales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DailyUtilities.this, DailyReport.class);
+                Intent intent = new Intent(MonthlyUtilities.this, MonthlyReport.class);
                 intent.putExtra("set",true);
-                intent.putExtra("year",year);
                 intent.putExtra("month",month);
-                intent.putExtra("day",day);
+                intent.putExtra("year",year);
                 startActivity(intent);
             }
         });
@@ -79,75 +80,85 @@ public class DailyUtilities extends AppCompatActivity implements DatePickerDialo
         seeVisits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DailyUtilities.this, DayVisit.class);
+                Intent intent = new Intent(MonthlyUtilities.this, MonthlyVisits.class);
                 intent.putExtra("set",true);
-                intent.putExtra("year",year);
                 intent.putExtra("month",month);
-                intent.putExtra("day",day);
+                intent.putExtra("year",year);
                 startActivity(intent);
             }
         });
 
-        selectDate.setOnClickListener(new View.OnClickListener() {
+        setDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDatePickerDialog();
+                MonthYearPickerDialog pd = new MonthYearPickerDialog();
+                pd.setListener(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        year =  i;
+                        month = i1-1;
+                        setSales(month,year);
+                    }
+                });
+                pd.show(getSupportFragmentManager(), "MonthYearPickerDialog");
             }
         });
 
         goBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
-        Intent rx = getIntent();
-        if(rx.getBooleanExtra("set",false))
-        {
-            day = rx.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-            month = rx.getIntExtra("month",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-            year = rx.getIntExtra("year",Calendar.getInstance().get(Calendar.YEAR));
-        }
-        else
-        {
-            day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            month = Calendar.getInstance().get(Calendar.MONTH);
-            year = Calendar.getInstance().get(Calendar.YEAR);
-        }
-
-        setSales(day,month,year);
+        setSales(Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR));
     }
 
-    private void showDatePickerDialog()
+    private DatePickerDialog createDialogWithoutDateField()
     {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                this,
-                year,
-                month,
-                day);
-        datePickerDialog.show();
+        DatePickerDialog dpd = new DatePickerDialog(this, this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        try {
+            java.lang.reflect.Field[] datePickerDialogFields = dpd.getClass().getDeclaredFields();
+            for (java.lang.reflect.Field datePickerDialogField : datePickerDialogFields) {
+                if (datePickerDialogField.getName().equals("mDatePicker"))
+                {
+                    datePickerDialogField.setAccessible(true);
+                    DatePicker datePicker = (DatePicker) datePickerDialogField.get(dpd);
+                    java.lang.reflect.Field[] datePickerFields = datePickerDialogField.getType().getDeclaredFields();
+                    for (java.lang.reflect.Field datePickerField : datePickerFields)
+                    {
+                        if ("mDaySpinner".equals(datePickerField.getName()))
+                        {
+                            datePickerField.setAccessible(true);
+                            Object dayPicker = datePickerField.get(datePicker);
+                            ((View) dayPicker).setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex) {
+        }
+        return dpd;
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+    public void onDateSet(DatePicker view, int y, int m, int dayOfMonth)
     {
-        this.day = dayOfMonth;
-        this.year = year;
-        this.month = month;
-        setSales(dayOfMonth,month,year);
+        this.year = y;
+        this.month = m;
+        setSales(this.month,this.year);
     }
 
-    private void setSales(Integer day, Integer month, Integer year)
+    private void setSales(Integer m, Integer y)
     {
-        String dateS = getFormatted(day)+"/"+getFormatted(month+1)+"/"+year;
-        String dateQ = year+"-"+(month+1)+"-"+day;
-        showDate.setText(dateS);
-
-        String url = server + "getDayStats.php?date="+dateQ;
-
-        JsonObjectRequest request = new JsonObjectRequest(
+        date.setText(getMonthForInt(m)+" "+y);
+        String url = server + "getMonthStats.php?year="+y+"&month="+(m+1);
+        final JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
                 null,
@@ -211,25 +222,19 @@ public class DailyUtilities extends AppCompatActivity implements DatePickerDialo
                 }
         );
 
-        RequestQueue queue = Volley.newRequestQueue(DailyUtilities.this);
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(request);
     }
 
-    private String getFormatted(Integer n)
+    private String getMonthForInt(int num)
     {
-        return n<10 ? "0"+n : n.toString();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
+        String month = "Formato incorrecto";
+        DateFormatSymbols dfs = new DateFormatSymbols(new Locale("es", "ES"));
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 )
         {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            month = months[num];
         }
+        return month.toUpperCase();
     }
 }
