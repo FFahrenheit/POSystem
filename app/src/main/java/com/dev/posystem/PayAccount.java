@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 
 public class PayAccount extends AppCompatActivity
 {
-    private FloatingActionButton ticketReturn;
+    private FloatingActionButton printTicket;
     private FloatingActionButton ticketPay;
     private EditText ticketPaid;
     private TextView ticketChange;
@@ -45,6 +46,7 @@ public class PayAccount extends AppCompatActivity
     private Utilities util;
     private boolean paid = false;
     private Sale paidSale = null;
+    private int pk = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,7 +57,7 @@ public class PayAccount extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ticketReturn = findViewById(R.id.ticketReturn);
+        printTicket = findViewById(R.id.ticketReturn);
         ticketPay = findViewById(R.id.ticketConfirm);
         ticketPaid = findViewById(R.id.ticketPaid);
         ticketChange = findViewById(R.id.ticketChange);
@@ -150,10 +152,72 @@ public class PayAccount extends AppCompatActivity
             }
         });
 
-        ticketReturn.setOnClickListener(new View.OnClickListener() {
+        printTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Log.d("Print ticket","AQUI LLEGOOO");
+                if(!paid)
+                {
+                    util.snack("Primero confirme el pago");
+                }
+                else
+                {
+                    if(paidSale != null && paidSale.getPk() != null)
+                    {
+                        pk = paidSale.getPk();
+                    }
+                    String url = util.getServer() + "printTicket.php?pk=" + pk;
+                    JsonObjectRequest request = new JsonObjectRequest(
+                            Request.Method.GET,
+                            url,
+                            null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    int status = 0;
+                                    try {
+                                        status = response.getInt("status");
+                                        String message = util.simpleStatusAlert(status);
+                                        if(status==200) {
+                                            Snackbar.make(ticketChange, "Ticket impreso", Snackbar.LENGTH_INDEFINITE)
+                                                    .setAction("Salir", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            finish();
+                                                        }
+                                                    }).show();
+                                        }
+                                        else
+                                        {
+                                            Snackbar.make(ticketChange, message, Snackbar.LENGTH_INDEFINITE)
+                                                    .setAction("Reintentar", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            printTicket.performClick();
+                                                        }
+                                                    }).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Snackbar.make(printTicket,"No se pudo imprimir el ticket",Snackbar.LENGTH_INDEFINITE)
+                                            .setAction("Reintentar", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    printTicket.performClick();
+                                                }
+                                            }).show();
+                                }
+                            }
+                    );
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(request);
+                }
             }
         });
     }
@@ -259,6 +323,7 @@ public class PayAccount extends AppCompatActivity
                                     String message = util.simpleStatusAlert(status);
                                     if(status==200)
                                     {
+                                        pk = response.getInt("pk");
                                         Snackbar.make(ticketChange, "Pago realizado con exito", Snackbar.LENGTH_INDEFINITE)
                                                 .setAction("Salir", new View.OnClickListener() {
                                                     @Override

@@ -40,7 +40,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:src="@drawable/ic_return"
+        android:src="@drawable/ic_baseline_print_24"
         app:layout_anchor="@id/ticketConfirm"
         app:layout_anchorGravity="top" />
 

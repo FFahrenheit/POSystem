@@ -109,7 +109,7 @@ public class AppSettings extends AppCompatActivity {
         alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton)
             {
-                if(isValidIPAddress(edittext.getText().toString()))
+                if(isValidIPAddress(edittext.getText().toString().split("/")[0]))
                 {
                     Toast.makeText(getApplicationContext(),edittext.getText().toString(),Toast.LENGTH_SHORT).show();
                     editor.putString("server", edittext.getText().toString());
