@@ -161,6 +161,7 @@ public class AddProduct extends AppCompatActivity
                                                                             if(status==200)
                                                                             {
                                                                                 searchProducts(search.getText().toString());
+                                                                                util.snack("Se ha agregado el producto");
                                                                             }
                                                                         } catch (JSONException e) {
                                                                             e.printStackTrace();
@@ -215,7 +216,7 @@ public class AddProduct extends AppCompatActivity
                                                                         public void onClick(View view) {
                                                                             finish();
                                                                         }
-                                                                    });
+                                                                    }).show();
                                                             break;
                                                         default:
                                                             Snackbar.make(search,"No se pudo agregar el producto",Snackbar.LENGTH_LONG).show();
