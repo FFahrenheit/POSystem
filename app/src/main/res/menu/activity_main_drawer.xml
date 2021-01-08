@@ -27,7 +27,7 @@
             <item
                 android:id="@+id/nav_utilities_daily"
                 android:icon="@drawable/ic_ventas"
-                android:title="Ventas por dia" />
+                android:title="Utilidades por dia" />
             <item
                 android:id="@+id/nav_utilities_monthly"
                 android:icon="@drawable/ic_month"
