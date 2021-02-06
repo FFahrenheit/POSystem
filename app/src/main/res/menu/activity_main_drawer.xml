@@ -72,6 +72,10 @@
                 android:id="@+id/nav_inventory"
                 android:icon="@drawable/ic_inventario"
                 android:title="Consultar y agregar inventario" />
+            <item
+                android:id="@+id/nav_print"
+                android:icon="@drawable/ic_baseline_print_24"
+                android:title="Imprimir etiquetas" />
         </menu>
     </item>
 </menu>

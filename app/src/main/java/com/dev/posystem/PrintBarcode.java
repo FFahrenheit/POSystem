@@ -29,9 +29,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class AddInventory extends AppCompatActivity
-{
-    private  EditText search;
+public class PrintBarcode extends AppCompatActivity {
+
+    private EditText search;
     private ListView list;
     private ArrayList<ProductItem> products;
     private ProductItemAdapter adapter;
@@ -41,10 +41,12 @@ public class AddInventory extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_inventory);
+        setContentView(R.layout.activity_print_barcode);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setTitle("Imprimir codigos de barras");
 
         search = findViewById(R.id.addInventorySearch);
         list = findViewById(R.id.addInventoryList);
@@ -60,46 +62,15 @@ public class AddInventory extends AppCompatActivity
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int itemPosition, long l) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(AddInventory.this);
-                final EditText edittext = new EditText(AddInventory.this);
-                edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
-                        InputType.TYPE_NUMBER_FLAG_DECIMAL |
-                        InputType.TYPE_NUMBER_FLAG_SIGNED);
-                alert.setMessage("Ingrese el stock a agregar");
-                alert.setTitle("Agregar "+products.get(itemPosition).getName());
+                AlertDialog.Builder alert = new AlertDialog.Builder(PrintBarcode.this);
+                alert.setMessage("¿Desea imprimir el codigo para " + products.get(itemPosition).getName()+"?");
+                alert.setTitle("Imprimir codigo "+products.get(itemPosition).getCodeBar());
 
-                alert.setView(edittext);
-
-                alert.setPositiveButton("Agregar stock", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("Imprimir", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        String addedStock = edittext.getText().toString();
-                        if(addedStock.charAt(0)=='.')
-                        {
-                            addedStock = "0"+addedStock;
-                        }
-                        if(addedStock.contains("-"))
-                        {
-                            Snackbar.make(search, "Ingrese stock positivo", Snackbar.LENGTH_LONG).show();
-                            return;
-                        }
-                        if(addedStock.contains(".") && products.get(itemPosition).getEsp().contains("ieza"))
-                        {
-                            Double val = Double.parseDouble(addedStock);
-                            if(val != Math.floor(val))
-                            {
-                                Snackbar.make(search, "Ingrese piezas enteras", Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
-                        }
-                        if(!util.isCode(addedStock))
-                        {
-                            util.snack("Ingrese un numero valido");
-                            return;
-                        }
-
-                        String url = server + "addInventory.php?pk="+products.get(itemPosition).getCodeBar()+"&add="+addedStock;
+                        String url = server + "printCodebar.php?pk="+products.get(itemPosition).getCodeBar();
                         JsonObjectRequest request = new JsonObjectRequest(
                                 Request.Method.GET,
                                 url,
@@ -127,7 +98,7 @@ public class AddInventory extends AppCompatActivity
                                 }
                         );
 
-                        RequestQueue queue = Volley.newRequestQueue(AddInventory.this);
+                        RequestQueue queue = Volley.newRequestQueue(PrintBarcode.this);
                         queue.add(request);
                     }
                 });
@@ -172,7 +143,7 @@ public class AddInventory extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //.setAction("Action", null).show();
+                //.setAction("Action", null).show();
                 finish();
             }
         });
@@ -236,7 +207,7 @@ public class AddInventory extends AppCompatActivity
                     }
                 }
         );
-        RequestQueue queue = Volley.newRequestQueue(AddInventory.this);
+        RequestQueue queue = Volley.newRequestQueue(PrintBarcode.this);
 
         queue.add(request);
     }

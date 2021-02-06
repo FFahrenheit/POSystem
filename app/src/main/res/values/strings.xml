@@ -41,4 +41,5 @@
         <item>Pieza(s)</item>
         <item>Granel</item>
     </string-array>
+    <string name="title_activity_print_barcode">PrintBarcode</string>
 </resources>

@@ -172,6 +172,9 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.nav_inventory:
                         intent = new Intent(MainActivity.this,AddInventory.class);
                         break;
+                    case R.id.nav_print:
+                        intent = new Intent(MainActivity.this, PrintBarcode.class);
+                        break;
                     default:
                         Snackbar.make(productList, "Aun no implementado", Snackbar.LENGTH_LONG)
                                 .show();

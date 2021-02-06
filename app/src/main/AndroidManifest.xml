@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dev.posystem">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher2"
@@ -11,9 +13,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PrintBarcode"
+            android:label="@string/title_activity_print_barcode"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".MonthlyUtilities"
             android:label="@string/title_activity_monthly_utilities"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DailyUtilities"
             android:label="@string/title_activity_daily_utilities"
@@ -104,7 +110,5 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
