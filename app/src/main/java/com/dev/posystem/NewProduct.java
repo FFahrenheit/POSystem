@@ -1,13 +1,16 @@
 package com.dev.posystem;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -28,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class NewProduct extends AppCompatActivity {
 
+    private Utilities util;
     private boolean isEdit;
     private EditText vName;
     private EditText vCode;
@@ -49,6 +53,8 @@ public class NewProduct extends AppCompatActivity {
         vStock = findViewById(R.id.newProductStock);
         vPrice = findViewById(R.id.newProductPrice);
         vEsp = findViewById(R.id.newProductEsp);
+
+        util = new Utilities(getApplicationContext(), vCode);
 
         Intent rx = getIntent();
         isEdit = rx.getBooleanExtra("edit",false);
@@ -135,13 +141,6 @@ public class NewProduct extends AppCompatActivity {
                                     switch(status)
                                     {
                                         case 200:
-                                            Snackbar.make(vName, "Producto guardado", Snackbar.LENGTH_LONG)
-                                                    .setAction("Aceptar", new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            resetForm();
-                                                        }
-                                                    }).show();
                                             if(isEdit)
                                             {
                                                 Snackbar.make(vName, "Producto modificado", Snackbar.LENGTH_INDEFINITE)
@@ -154,6 +153,68 @@ public class NewProduct extends AppCompatActivity {
                                             }
                                             else
                                             {
+                                                if(vCode.getText().toString().trim().equals("")) //Sin codigo
+                                                {
+                                                    AlertDialog.Builder alert = new AlertDialog.Builder(NewProduct.this);
+                                                    final int code = response.getInt("code");
+                                                    alert.setMessage("¿Desea imprimir el codigo para " + vName.getText().toString() +"?");
+                                                    alert.setTitle("Imprimir codigo " + code);
+
+                                                    alert.setPositiveButton("Imprimir", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i)
+                                                        {
+                                                            String url = getServer() + "printBarcode.php?pk=" + code;
+                                                            JsonObjectRequest request = new JsonObjectRequest(
+                                                                    Request.Method.GET,
+                                                                    url,
+                                                                    null,
+                                                                    new Response.Listener<JSONObject>() {
+                                                                        @Override
+                                                                        public void onResponse(JSONObject response) {
+                                                                            try {
+                                                                                int status = response.getInt("status");
+                                                                                util.simpleStatusAlert(status);
+                                                                                if(status==200)
+                                                                                {
+                                                                                    util.toast("Enviado a la impresora");
+                                                                                }
+                                                                            } catch (JSONException e) {
+                                                                                e.printStackTrace();
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    new Response.ErrorListener() {
+                                                                        @Override
+                                                                        public void onErrorResponse(VolleyError error) {
+                                                                            util.snack("No se pudo completar la peticion");
+                                                                            Log.d("Error: ", error.getMessage());
+                                                                        }
+                                                                    }
+                                                            );
+
+                                                            RequestQueue queue = Volley.newRequestQueue(NewProduct.this);
+                                                            queue.add(request);
+                                                        }
+                                                    });
+
+                                                    alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            util.snack("Operacion cancelada");
+                                                        }
+                                                    });
+
+                                                    alert.show();
+                                                }
+
+                                                Snackbar.make(vName, "Producto guardado", Snackbar.LENGTH_LONG)
+                                                        .setAction("Aceptar", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                resetForm();
+                                                            }
+                                                        }).show();
                                                 resetForm();
                                             }
                                             break;
@@ -169,7 +230,7 @@ public class NewProduct extends AppCompatActivity {
 
                                     }
                                 } catch (JSONException e) {
-                                    Snackbar.make(vName, "Error en el servidor", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(vName, "Error en el servidor o la respuesta", Snackbar.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }

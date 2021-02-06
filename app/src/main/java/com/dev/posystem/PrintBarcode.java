@@ -1,6 +1,7 @@
 package com.dev.posystem;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -70,7 +73,7 @@ public class PrintBarcode extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        String url = server + "printCodebar.php?pk="+products.get(itemPosition).getCodeBar();
+                        String url = server + "printBarcode.php?pk="+products.get(itemPosition).getCodeBar();
                         JsonObjectRequest request = new JsonObjectRequest(
                                 Request.Method.GET,
                                 url,
@@ -94,6 +97,7 @@ public class PrintBarcode extends AppCompatActivity {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         util.snack("No se pudo completar la peticion");
+                                        Log.d("Error: ", error.getMessage());
                                     }
                                 }
                         );
@@ -155,9 +159,13 @@ public class PrintBarcode extends AppCompatActivity {
     {
         products.clear();
         String url;
-        if(util.isCode(searchQuery) && !searchQuery.contains("."))
+        if(searchQuery.equals(""))
         {
-            url = server + "searchByCode.php?code="+searchQuery;
+            url = server + "searchByCodeDesc.php?code=" + searchQuery;
+        }
+        else if(util.isCode(searchQuery) && !searchQuery.contains("."))
+        {
+            url = server + "searchByCode.php?code=" + searchQuery;
         }
         else
         {
@@ -210,5 +218,10 @@ public class PrintBarcode extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(PrintBarcode.this);
 
         queue.add(request);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+        return true;
     }
 }
