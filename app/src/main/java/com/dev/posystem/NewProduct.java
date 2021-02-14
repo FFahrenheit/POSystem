@@ -10,6 +10,9 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +30,11 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class NewProduct extends AppCompatActivity {
@@ -39,6 +47,7 @@ public class NewProduct extends AppCompatActivity {
     private Spinner vEsp;
     private EditText vPrice;
     private String originalCode;
+    private ArrayList<LocalDatabase> localProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,10 @@ public class NewProduct extends AppCompatActivity {
         vEsp = findViewById(R.id.newProductEsp);
 
         util = new Utilities(getApplicationContext(), vCode);
+
+        localProducts = new ArrayList<>();
+        readProducts();
+
 
         Intent rx = getIntent();
         isEdit = rx.getBooleanExtra("edit",false);
@@ -74,6 +87,42 @@ public class NewProduct extends AppCompatActivity {
                 vCode.setClickable(false);
             }
         }
+
+        vCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().contains("\n") || s.length() >= 8)
+                {
+                    boolean found = false;
+                    Log.d("Checking", "Checking " + s.toString());
+                    String code = s.toString().trim();
+                    for (int i = 0; i < localProducts.size() ; i++) {
+                        if(localProducts.get(i).getCode().equals(code))
+                        {
+                            Log.d("Found", localProducts.get(i).getDescription() + " found");
+                            vName.setText(localProducts.get(i).getDescription());
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found)
+                    {
+                            Log.d("Not found", code);
+                            util.toast("No se encontro el producto en la base local");
+                            vName.setText("");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         FloatingActionButton save = findViewById(R.id.newProductSave);
         save.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +307,29 @@ public class NewProduct extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+    public void readProducts()
+    {
+        String content[] = null;
+        try
+        {
+            InputStream inputStream = getAssets().open("BASE.csv");
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while((line = br.readLine()) != null){
+                Log.d("Read",line);
+                content = line.split(",");
+                localProducts.add(new LocalDatabase(content[1],content[2]));
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("Error",e.getMessage());
+        }
+        Log.d("BASE", localProducts.size() + " products added");
+        util.toast(localProducts.size() + " productos locales cargados");
     }
 
     @Override
