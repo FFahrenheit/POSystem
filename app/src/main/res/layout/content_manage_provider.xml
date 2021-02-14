@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <android.support.v7.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre del proveedor"
@@ -17,7 +17,7 @@
             android:id="@+id/manageProviderSearch"
             android:inputType="text"
             android:textAlignment="center">
-        </android.support.design.widget.TextInputEditText>
+        </com.google.android.material.textfield.TextInputEditText>
         <ListView
             android:id="@+id/manageProviderList"
             android:layout_width="match_parent"
@@ -30,5 +30,5 @@
             android:textSize="18dp"
             android:textAlignment="center"
             android:text="No se encontraron proveedores"></TextView>
-    </android.support.v7.widget.LinearLayoutCompat>
-</android.support.constraint.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>
