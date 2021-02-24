@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -96,7 +97,7 @@ public class NewProduct extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().contains("\n") || s.length() >= 8)
+                if(s.toString().contains("\n") || s.length() >= 6)
                 {
                     boolean found = false;
                     Log.d("Checking", "Checking " + s.toString());
@@ -319,9 +320,28 @@ public class NewProduct extends AppCompatActivity {
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line = "";
             while((line = br.readLine()) != null){
-                Log.d("Read",line);
                 content = line.split(",");
                 localProducts.add(new LocalDatabase(content[1],content[2]));
+                //Log.d("Product",localProducts.get(localProducts.size()-1).toString());
+            }
+            br.close();
+            inputStream = getAssets().open("BASE2.csv");
+            br = new BufferedReader(new InputStreamReader(inputStream));
+            while((line = br.readLine()) != null){
+                if(line.length() >0 && !line.trim().isEmpty() && !line.equals(",,"))
+                {
+                    content = line.split(",");
+                    if(content.length == 1 || content[0].contains("-"))
+                    {
+                        String [] values = content[0].split("-");
+                        localProducts.add(new LocalDatabase(values[0].trim(),values[1].trim()));
+                    }
+                    else if(content.length >= 2)
+                    {
+                        localProducts.add(new LocalDatabase(content[0],content[1]));
+                    }
+                }
+                //Log.d("Product",localProducts.get(localProducts.size()-1).toString());
             }
             br.close();
         } catch (IOException e) {
@@ -329,7 +349,14 @@ public class NewProduct extends AppCompatActivity {
             Log.d("Error",e.getMessage());
         }
         Log.d("BASE", localProducts.size() + " products added");
-        util.toast(localProducts.size() + " productos locales cargados");
+        int ok = 0;
+        for (int i = 0; i < localProducts.size() ; i++) {
+            if(Long.parseLong(localProducts.get(i).getCode())!=0)
+            {
+                ok++;
+            }
+        }
+        util.toast(localProducts.size() + "/" + ok + " productos locales cargados");
     }
 
     @Override

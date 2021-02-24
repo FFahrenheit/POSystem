@@ -1,5 +1,7 @@
 package com.dev.posystem;
 
+import androidx.annotation.NonNull;
+
 public class LocalDatabase {
 
     private String code;
@@ -24,5 +26,11 @@ public class LocalDatabase {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.code + " - " + this.description;
     }
 }
